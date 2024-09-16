@@ -1,0 +1,23 @@
+// .sidebar {
+//   background-color: #f0f0f0; /* Màu nền cho sidebar */
+//   padding: 10px; /* Khoảng cách bên trong */
+//   width: 200px; /* Chiều rộng của sidebar */
+// }
+
+.headerbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .btn-signin {
+    margin-right: 10px;
+  }
+}
+
+// .sidebar ul {
+//   list-style-type: none; /* Bỏ dấu đầu dòng */
+//   padding: 0; /* Bỏ khoảng cách bên trong */
+// }
+
+// .sidebar li {
+//   margin: 5px 0; /* Khoảng cách giữa các mục */
+// }
