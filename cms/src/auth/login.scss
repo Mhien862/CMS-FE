@@ -1,5 +1,4 @@
 body {
-  font-family: cursive;
   background-color: #f6f7f8;
 }
 
@@ -11,6 +10,7 @@ body {
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   font-family: cursive;
+  margin-top: 100px;
 }
 
 .login-title {
@@ -35,7 +35,6 @@ body {
     font-weight: 900;
   }
   .ant-btn {
-    width: 330px;
     height: 40px;
     font-weight: 400;
     background-color: #1877f2 !important;

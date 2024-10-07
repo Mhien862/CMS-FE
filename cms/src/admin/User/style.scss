@@ -1,0 +1,34 @@
+.list-user {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+
+  .header-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .title-list {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .ant-btn {
+      margin-left: 20px; // Add some space between the title and button
+    }
+    .title-list {
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
+
+  .ant-table-wrapper {
+    flex: 1;
+
+    .ant-table {
+      overflow-y: auto;
+    }
+  }
+}

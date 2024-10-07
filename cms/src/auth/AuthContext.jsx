@@ -13,8 +13,7 @@ function Login() {
   const handleSubmit = async (values) => {
     try {
       const data = await login(values.email, values.password);
-      // Lưu token vào localStorage hoặc state nếu cần
-      localStorage.getItem("token", data.token);
+      localStorage.setItem("token", data.token);
       notification.success({
         message: "Đăng nhập thành công!",
         description: "Chào mừng bạn đến với hệ thống!",

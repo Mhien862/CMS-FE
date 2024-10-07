@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import Login from "./auth/AuthContext";
-import CreateUser from "./admin/createUser";
+import CreateUser from "./admin/User/createUser";
+import ListUser from "./admin/User/listUser";
+import EditUserForm from "./admin/User/editUser";
 import Layout from "./layout";
 const router = createBrowserRouter([
   {
@@ -8,13 +10,22 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/create-user",
-    element: <CreateUser />,
-  },
-
-  {
     path: "/",
     element: <Layout />,
+    children: [
+      {
+        path: "create-user",
+        element: <CreateUser />,
+      },
+      {
+        path: "list-user",
+        element: <ListUser />,
+      },
+      {
+        path: "edit-user/:id",
+        element: <EditUserForm />,
+      },
+    ],
   },
 ]);
 
