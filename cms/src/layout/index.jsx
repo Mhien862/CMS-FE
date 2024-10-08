@@ -5,7 +5,7 @@ import {
   MenuUnfoldOutlined,
   UploadOutlined,
   UserOutlined,
-  VideoCameraOutlined,
+  LaptopOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
 import { Button, Layout as LayoutAntd, Menu, theme, Dropdown } from "antd";
@@ -61,8 +61,11 @@ const Layout = () => {
             },
             {
               key: "2",
-              icon: <VideoCameraOutlined />,
-              label: "nav 2",
+              icon: <LaptopOutlined />,
+              label: "Class",
+              onClick: () => {
+                navigate("/list-class");
+              },
             },
             {
               key: "3",

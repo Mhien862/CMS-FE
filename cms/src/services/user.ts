@@ -20,3 +20,8 @@ export const updateUser = async (id: string, data: any) => {
     const response = await axiosInstance.put(`user/updateUser/${id}`, data);
     return  response.data;
 }
+
+export const updateStatusUser = async (id: string, data: any) => {
+    const response = await axiosInstance.put(`user/${id}/status`, data);
+    return response.data;
+}

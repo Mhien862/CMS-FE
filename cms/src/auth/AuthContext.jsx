@@ -18,9 +18,16 @@ function Login() {
         message: "Đăng nhập thành công!",
         description: "Chào mừng bạn đến với hệ thống!",
       });
-      navigate("/create-user");
-    } catch {
-      notification.error("Đăng nhập thất bại!");
+      navigate("/list-user");
+    } catch (error) {
+      console.error(error);
+      const errorMessage =
+        error.response?.data?.message || "Đã xảy ra lỗi. Vui lòng thử lại sau.";
+
+      notification.error({
+        message: "Đăng nhập thất bại!",
+        description: errorMessage,
+      });
     }
   };
 

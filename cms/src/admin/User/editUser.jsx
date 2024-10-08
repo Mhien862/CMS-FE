@@ -6,6 +6,7 @@ import { useRole } from "../../hook/useRole";
 import { useFaculty } from "../../hook/useFaculty";
 import { getInforUser } from "../../services/user";
 import { updateUser } from "../../services/user";
+import "./style.scss";
 
 const { Option } = Select;
 
@@ -27,7 +28,7 @@ const EditUserForm = () => {
           username: userData.username,
           email: userData.email,
           role_id: userData.role_id,
-          faculty_id: userData.faculty_id, // Note: changed from 'faculty_id' to 'faculty' to match form field name
+          faculty_id: userData.faculty_id,
           is_active: userData.is_active,
         });
       } catch (error) {
@@ -69,7 +70,7 @@ const EditUserForm = () => {
   }
 
   return (
-    <div style={{ padding: 20 }}>
+    <div className="edit-user" style={{ padding: 20 }}>
       <div style={{ maxWidth: 400, margin: "auto" }}>
         <h2>Edit User</h2>
         <Form
