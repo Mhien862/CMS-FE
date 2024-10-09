@@ -36,3 +36,8 @@ export const deleteClass = async (id: string) => {
     const response = await axiosInstance.delete(`class/deleteClass/${id}`);
     return response.data;
 }
+
+export const getClassesByTeacherId = async (teacherId) => {
+    const response = await axiosInstance.get(`class/teacher/${teacherId}`);
+    return response.data;
+  };

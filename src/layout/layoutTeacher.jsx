@@ -13,7 +13,7 @@ import { getMe } from "../services/user";
 
 const { Header, Sider, Content } = LayoutAntd;
 
-const Layout = () => {
+const LayoutTeacher = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [user, setUser] = useState(null);
   const {
@@ -67,22 +67,14 @@ const Layout = () => {
           items={[
             {
               key: "1",
-              icon: <UserOutlined />,
-              label: "User",
+              icon: <LaptopOutlined />,
+              label: "Class",
               onClick: () => {
-                navigate("/list-user");
+                navigate("/teacher/class-teacher");
               },
             },
             {
               key: "2",
-              icon: <LaptopOutlined />,
-              label: "Class",
-              onClick: () => {
-                navigate("/list-class");
-              },
-            },
-            {
-              key: "3",
               icon: <DashboardOutlined />,
               label: "Dashboard",
             },
@@ -137,4 +129,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default LayoutTeacher;

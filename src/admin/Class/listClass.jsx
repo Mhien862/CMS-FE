@@ -238,6 +238,7 @@ const ClassList = () => {
         {filteredClasses.map((classItem) => (
           <Col xs={24} sm={12} md={8} lg={6} key={classItem.id}>
             <Card
+              hoverable
               title={classItem.name}
               extra={
                 <Dropdown overlay={menu(classItem.id)} trigger={["click"]}>
@@ -253,11 +254,11 @@ const ClassList = () => {
                 {getFacultyName(classItem.faculty_id)}
               </p>
               <p>
-                <strong>Teacher Name:</strong>
+                <strong>Teacher Name: </strong>
                 {getTeacherName(classItem.teacher_id)}
               </p>
               <p>
-                <strong>Class ID:</strong> {classItem.id}
+                <strong>Class ID: </strong> {classItem.id}
               </p>
             </Card>
           </Col>

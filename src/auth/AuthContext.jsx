@@ -1,24 +1,65 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Form, Input, Button, Typography, notification } from "antd";
-import "./login.scss"; // Import file SCSS
+import "./login.scss";
 import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 import { login } from "../services/login";
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // Lắng nghe sự kiện storage thay đổi
+    const handleStorageChange = (e) => {
+      if (e.key === "user") {
+        const newUser = JSON.parse(e.newValue);
+        if (newUser) {
+          redirectBasedOnRole(newUser.role_id);
+        }
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  const redirectBasedOnRole = (roleId) => {
+    switch (roleId) {
+      case 1:
+        navigate("/list-user");
+        break;
+      case 2:
+        navigate("/teacher/class-teacher");
+        break;
+      default:
+        navigate("/dashboard");
+        break;
+    }
+  };
+
   const handleSubmit = async (values) => {
     try {
-      const data = await login(values.email, values.password);
-      localStorage.setItem("token", data.token);
+      const response = await login(values.email, values.password);
+      const { user, token } = response;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      // Kích hoạt sự kiện storage để thông báo cho các tab khác
+      window.dispatchEvent(new Event("storage"));
+
       notification.success({
         message: "Đăng nhập thành công!",
         description: "Chào mừng bạn đến với hệ thống!",
       });
-      navigate("/list-user");
+
+      redirectBasedOnRole(user.role_id);
     } catch (error) {
       console.error(error);
       const errorMessage =

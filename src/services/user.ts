@@ -25,3 +25,8 @@ export const updateStatusUser = async (id: string, data: any) => {
     const response = await axiosInstance.put(`user/${id}/status`, data);
     return response.data;
 }
+
+export const getMe = async () => { 
+    const response = await axiosInstance.get("user/me");
+    return response.data;
+} 
