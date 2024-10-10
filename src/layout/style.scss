@@ -1,77 +1,92 @@
-// .sidebar {
-//   background-color: #f0f0f0; /* Màu nền cho sidebar */
-//   padding: 10px; /* Khoảng cách bên trong */
-//   width: 200px; /* Chiều rộng của sidebar */
-// }
+.layout {
+  height: auto;
+  background-color: #f5f5f5; // Light gray background for a minimal look
 
-// .headerbar {
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   .btn-signin {
-//     margin-right: 10px;
-//   }
-// }
+  .sider {
+    background-color: #2c3e50; // Dark blue-gray color for the sidebar
+    color: #fff;
 
-// // .sidebar ul {
-// //   list-style-type: none; /* Bỏ dấu đầu dòng */
-// //   padding: 0; /* Bỏ khoảng cách bên trong */
-// // }
+    // Ensure the menu takes the full height and uses the sidebar color
+    .ant-menu {
+      background-color: #2c3e50; // Match sidebar color
+      border-right: none; // Remove default border
+    }
 
-// // .sidebar li {
-// //   margin: 5px 0; /* Khoảng cách giữa các mục */
-// // }
+    .ant-menu-item {
+      font-weight: 600; // Make the font weight bolder
+      font-size: 16px; // Adjust font size if needed
 
-// .dashboard-layout {
-//   min-height: 100vh;
-//   display: flex;
-// }
+      // Ensure the selected item has the same background color as the sidebar
+      &.ant-menu-item-selected {
+        background-color: #2c3e50; // Match sidebar color
+      }
 
-// .dashboard-sider {
-//   height: 100vh;
-//   position: fixed;
-//   left: 0;
-//   overflow-y: auto;
-// }
+      &:hover {
+        background-color: #3498db; // Highlight color on hover
+      }
+    }
+  }
 
-// .logo {
-//   height: 32px;
-//   margin: 16px;
-//   background: rgba(255, 255, 255, 0.3);
-// }
+  .header {
+    background: #fff;
+    padding: 0 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e8e8e8;
 
-// .site-layout {
-//   margin-left: 200px;
-//   width: calc(100% - 200px);
-//   display: flex;
-//   flex-direction: column;
-// }
+    .collapse-button {
+      font-size: 16px;
+      width: 64px;
+      height: 64px;
+      color: #3498db; // Primary color for icon
+      transition: color 0.3s;
 
-// .site-layout-header {
-//   background: #fff;
-//   padding: 0 16px;
-//   height: 64px;
-//   line-height: 64px;
-//   position: sticky;
-//   top: 0;
-//   z-index: 1;
-//   width: 100%;
-// }
+      &:hover {
+        color: #2980b9; // Lighter shade on hover
+      }
+    }
 
-// .site-layout-content {
-//   padding: 24px;
-//   flex: 1;
-//   overflow-y: auto;
-// }
+    .header-icons {
+      display: flex;
+      align-items: center;
 
-// @media (max-width: 768px) {
-//   .dashboard-sider {
-//     position: fixed;
-//     z-index: 999;
-//   }
+      .search-input {
+        width: 200px;
+        margin-right: 16px;
+      }
 
-//   .site-layout {
-//     margin-left: 0;
-//     width: 100%;
-//   }
-// }
+      .header-button {
+        margin-left: 16px;
+        border: none;
+        background: transparent;
+        color: #3498db; // Primary icon color
+        transition: color 0.3s;
+
+        &:hover {
+          color: #2980b9; // Darker shade on hover
+        }
+      }
+    }
+
+    .user-dropdown {
+      color: rgba(0, 0, 0, 0.65);
+      display: flex;
+      align-items: center;
+
+      &:hover {
+        color: #3498db; // Change color on hover
+      }
+    }
+  }
+
+  .content {
+    flex: 1; // Allow content area to take remaining space
+    margin: 24px 16px;
+    padding: 24px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: auto; // Enable scrolling
+  }
+}

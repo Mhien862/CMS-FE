@@ -1,3 +1,35 @@
 .list-class {
   height: 100vh;
+  padding: 20px;
+
+  .class-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  h1 {
+    font-size: 2rem;
+    color: #333;
+  }
+
+  button {
+    border-radius: 4px;
+    font-weight: bold;
+  }
+
+  .ant-select {
+    border-radius: 4px;
+  }
+
+  .ant-input {
+    border-radius: 4px;
+  }
+
+  .ant-space {
+    margin-bottom: 16px;
+  }
 }

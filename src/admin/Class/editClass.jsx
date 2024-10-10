@@ -148,8 +148,8 @@ const EditClassForm = () => {
 
       <Form.Item
         name="password"
-        label="Password"
-        rules={[{ required: true, message: "Please input the password!" }]}
+        label="Code"
+        rules={[{ required: true, message: "Please input the Code!" }]}
       >
         <Input.Password />
       </Form.Item>

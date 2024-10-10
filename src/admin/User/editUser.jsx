@@ -71,7 +71,7 @@ const EditUserForm = () => {
 
   return (
     <div className="edit-user" style={{ padding: 20 }}>
-      <div style={{ maxWidth: 400, margin: "auto" }}>
+      <div className="form-container">
         <h2>Edit User</h2>
         <Form
           form={form}
@@ -84,7 +84,7 @@ const EditUserForm = () => {
             label="Username"
             rules={[{ required: true, message: "Please input your username!" }]}
           >
-            <Input size="large" />
+            <Input size="large" placeholder="Enter username" />
           </Form.Item>
 
           <Form.Item
@@ -95,7 +95,7 @@ const EditUserForm = () => {
               { type: "email", message: "Please enter a valid email!" },
             ]}
           >
-            <Input size="large" />
+            <Input size="large" placeholder="Enter email" />
           </Form.Item>
 
           <Form.Item

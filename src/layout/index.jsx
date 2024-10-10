@@ -7,9 +7,21 @@ import {
   UserOutlined,
   LaptopOutlined,
   LogoutOutlined,
+  GlobalOutlined,
+  BellOutlined,
+  SettingOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
-import { Button, Layout as LayoutAntd, Menu, theme, Dropdown } from "antd";
+import {
+  Button,
+  Layout as LayoutAntd,
+  Menu,
+  theme,
+  Dropdown,
+  Input,
+} from "antd";
 import { getMe } from "../services/user";
+import "./style.scss"; // Import the SCSS file
 
 const { Header, Sider, Content } = LayoutAntd;
 
@@ -44,6 +56,7 @@ const Layout = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
     navigate("/login");
   };
@@ -57,9 +70,9 @@ const Layout = () => {
   );
 
   return (
-    <LayoutAntd>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="demo-logo-vertical" />
+    <LayoutAntd className="layout">
+      <Sider trigger={null} collapsible collapsed={collapsed} className="sider">
+        <div className="logo" />
         <Menu
           theme="dark"
           mode="inline"
@@ -83,6 +96,14 @@ const Layout = () => {
             },
             {
               key: "3",
+              icon: <GlobalOutlined />,
+              label: "Faculty",
+              onClick: () => {
+                navigate("/list-faculty");
+              },
+            },
+            {
+              key: "4",
               icon: <DashboardOutlined />,
               label: "Dashboard",
             },
@@ -90,31 +111,24 @@ const Layout = () => {
         />
       </Sider>
       <LayoutAntd>
-        <Header
-          style={{
-            padding: 0,
-            background: colorBgContainer,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+        <Header className="header">
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: "16px",
-              width: 64,
-              height: 64,
-            }}
+            className="collapse-button"
           />
-          <div style={{ marginRight: 16 }}>
+
+          <div className="header-icons">
+            <Input
+              placeholder="Search"
+              prefix={<SearchOutlined />}
+              className="search-input"
+            />
+            <Button icon={<BellOutlined />} className="header-button" />
+            <Button icon={<SettingOutlined />} className="header-button" />
             <Dropdown overlay={userMenu} trigger={["click"]}>
-              <a
-                onClick={(e) => e.preventDefault()}
-                style={{ color: "rgba(0, 0, 0, 0.65)" }}
-              >
+              <a onClick={(e) => e.preventDefault()} className="user-dropdown">
                 <UserOutlined style={{ marginRight: 8 }} />
                 <span>{user ? user.username : "Loading..."}</span>
               </a>
@@ -122,6 +136,7 @@ const Layout = () => {
           </div>
         </Header>
         <Content
+          className="content"
           style={{
             margin: "24px 16px",
             padding: 24,

@@ -9,6 +9,7 @@ import {
   EditOutlined,
   DeleteOutlined,
   ApiOutlined,
+  PlusOutlined,
 } from "@ant-design/icons";
 import "./style.scss";
 
@@ -232,7 +233,11 @@ const ListUser = () => {
     <div className="list-user">
       <div className="header-list">
         <div className="title-list">List User</div>
-        <Button type="primary" onClick={handleCreateUser}>
+        <Button
+          icon={<PlusOutlined />}
+          type="primary"
+          onClick={handleCreateUser}
+        >
           Create User
         </Button>
       </div>

@@ -1,8 +1,5 @@
 .list-user {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
+  padding: 24px;
 
   .header-list {
     display: flex;
@@ -13,22 +10,69 @@
     .title-list {
       font-size: 24px;
       font-weight: bold;
+      color: #333; // Darker text color for better visibility
+    }
+  }
+
+  .filter-container {
+    display: flex;
+    gap: 10px; // Original gap
+    margin-bottom: 20px;
+
+    .ant-select {
+      min-width: 150px; // Minimum width for select boxes
     }
 
-    .ant-btn {
-      margin-left: 20px; // Add some space between the title and button
+    .ant-input {
+      width: 300px; // Fixed width for search input
     }
-    .title-list {
-      font-size: 20px;
+
+    button {
+      border-radius: 4px;
+      transition: background-color 0.3s, color 0.3s;
+
+      &:hover {
+        background-color: #1890ff; // Button hover effect
+        color: #fff;
+      }
+    }
+  }
+
+  .user-table {
+    .ant-table {
+      background-color: #fff; // White background for the table
+      border-radius: 8px;
+      overflow: hidden; // Prevent overflow from rounded corners
+
+      th {
+        background-color: #f5f5f5; // Light gray header background
+        font-weight: bold;
+        color: #555; // Darker text color
+      }
+
+      td {
+        &:hover {
+          background-color: #f0f0f0; // Highlight row on hover
+        }
+      }
+    }
+  }
+
+  .ant-modal-confirm {
+    .ant-modal-confirm-title {
       font-weight: bold;
     }
-  }
 
-  .ant-table-wrapper {
-    flex: 1;
-
-    .ant-table {
-      overflow-y: auto;
+    .ant-modal-confirm-body {
+      font-size: 16px;
     }
   }
+}
+
+.edit-user {
+  height: 100vh;
+}
+
+.form-user {
+  height: 100vh;
 }

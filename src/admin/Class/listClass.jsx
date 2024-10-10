@@ -12,13 +12,14 @@ import {
   Select,
   Space,
 } from "antd";
-import { EllipsisOutlined } from "@ant-design/icons";
+import { EllipsisOutlined, PlusOutlined } from "@ant-design/icons";
 import { getAllClass, getListTeacher } from "../../services/class";
 import { useFaculty } from "../../hook/useFaculty";
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
 import { deleteClass } from "../../services/class";
 import { Modal } from "antd";
+
 const { confirm } = Modal;
 const { Search } = Input;
 const { Option } = Select;
@@ -70,14 +71,13 @@ const ClassList = () => {
   }, [searchTerm, selectedFaculty, selectedTeacher, classes]);
 
   useEffect(() => {
-    // Lọc danh sách giảng viên khi khoa được chọn
     if (selectedFaculty) {
       const filtered = teachers.filter(
         (teacher) => teacher.faculty_id === selectedFaculty
       );
       setFilteredTeachers(filtered);
     } else {
-      setFilteredTeachers([]); // Khi chưa chọn khoa, giảng viên không được hiển thị
+      setFilteredTeachers([]);
     }
   }, [selectedFaculty, teachers]);
 
@@ -155,7 +155,7 @@ const ClassList = () => {
 
   const handleFacultyChange = (value) => {
     setSelectedFaculty(value);
-    setSelectedTeacher(null); // Reset selected teacher khi thay đổi khoa
+    setSelectedTeacher(null);
   };
 
   const handleTeacherChange = (value) => {
@@ -193,7 +193,11 @@ const ClassList = () => {
         }}
       >
         <h1 style={{ fontSize: "24px", fontWeight: "bold" }}>All Classes</h1>
-        <Button type="primary" onClick={handleCreateClass}>
+        <Button
+          type="primary"
+          onClick={handleCreateClass}
+          icon={<PlusOutlined />}
+        >
           Create Class
         </Button>
       </div>
@@ -247,14 +251,19 @@ const ClassList = () => {
                   </a>
                 </Dropdown>
               }
-              style={{ height: "100%" }}
+              style={{
+                height: "100%",
+                borderRadius: "10px",
+                boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+              }}
+              className="class-card"
             >
               <p>
                 <strong>Faculty: </strong>
                 {getFacultyName(classItem.faculty_id)}
               </p>
               <p>
-                <strong>Teacher Name: </strong>
+                <strong>Teacher: </strong>
                 {getTeacherName(classItem.teacher_id)}
               </p>
               <p>

@@ -1,0 +1,38 @@
+.my-class {
+  height: 100vh;
+  padding: 20px;
+
+  .class-card {
+    transition: transform 0.3s;
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .class-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    .faculty-name {
+      color: #888;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+  }
+
+  .class-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    Button {
+      width: 100%;
+    }
+  }
+}

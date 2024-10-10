@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { getClassesByTeacherId } from "../services/class";
 import { Card, List, Typography, Spin, Button } from "antd";
+import "./style.scss";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 function TeacherClasses() {
   const [classes, setClasses] = useState([]);
@@ -18,7 +19,7 @@ function TeacherClasses() {
         }
       } catch (error) {
         console.error("Error fetching classes:", error);
-        // Có thể hiển thị thông báo lỗi ở đây
+        // Optionally show an error notification here
       } finally {
         setLoading(false);
       }
@@ -36,7 +37,7 @@ function TeacherClasses() {
   }
 
   return (
-    <div>
+    <div className="my-class">
       <Title level={2} style={{ marginBottom: 16 }}>
         My Classes
       </Title>
@@ -47,11 +48,7 @@ function TeacherClasses() {
           <List.Item>
             <Card
               hoverable
-              style={{
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-              }}
+              className="class-card"
               bodyStyle={{
                 flex: 1,
                 display: "flex",
@@ -59,17 +56,24 @@ function TeacherClasses() {
                 justifyContent: "space-between",
               }}
             >
-              <div>
-                <Title level={4}>{classItem.name}</Title>
-                {/* Thêm các thông tin khác của lớp học nếu cần */}
+              <div className="class-info">
+                <Title level={4} style={{ textAlign: "center" }}>
+                  {classItem.name}
+                </Title>
+                <Text className="faculty-name">{classItem.faculty_name}</Text>
+                {/* Add any additional information here */}
               </div>
-              <Button
-                type="primary"
-                onClick={() => handleJoinClass(classItem.id)}
-                style={{ marginTop: "auto" }}
-              >
-                Join Class
-              </Button>
+              <div className="class-actions">
+                <Button
+                  type="primary"
+                  onClick={() => handleJoinClass(classItem.id)}
+                >
+                  Enter Class
+                </Button>
+                <Button type="default" style={{ marginTop: 8 }}>
+                  View Details
+                </Button>
+              </div>
             </Card>
           </List.Item>
         )}

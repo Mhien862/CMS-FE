@@ -33,8 +33,8 @@ const FormUser = () => {
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <div style={{ maxWidth: 400, margin: "auto" }}>
+    <div className="form-user">
+      <div className="form-container">
         <h2>Create New User</h2>
         <Form
           form={form}
@@ -47,7 +47,7 @@ const FormUser = () => {
             label="Username"
             rules={[{ required: true, message: "Please input your username!" }]}
           >
-            <Input size="large" />
+            <Input size="large" placeholder="Enter username" />
           </Form.Item>
 
           <Form.Item
@@ -58,7 +58,7 @@ const FormUser = () => {
               { type: "email", message: "Please enter a valid email!" },
             ]}
           >
-            <Input size="large" />
+            <Input size="large" placeholder="Enter email" />
           </Form.Item>
 
           <Form.Item
@@ -66,7 +66,7 @@ const FormUser = () => {
             label="Password"
             rules={[{ required: true, message: "Please input your password!" }]}
           >
-            <Input.Password size="large" />
+            <Input.Password size="large" placeholder="Enter password" />
           </Form.Item>
 
           <Form.Item
@@ -93,9 +93,9 @@ const FormUser = () => {
               placeholder="Select a faculty"
               loading={loading}
             >
-              {faculty?.map((faculty) => (
-                <Option key={faculty.id} value={faculty.id}>
-                  {faculty.name}
+              {faculty?.map((fac) => (
+                <Option key={fac.id} value={fac.id}>
+                  {fac.name}
                 </Option>
               ))}
             </Select>

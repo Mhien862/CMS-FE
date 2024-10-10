@@ -10,6 +10,7 @@ import EditClassForm from "./admin/Class/editClass";
 import Layout from "./layout";
 import LayoutTeacher from "./layout/layoutTeacher";
 import ClassTeacher from "./teacher/classTeacher";
+import FacultyList from "./admin/Faculty/listfaculty";
 
 // ProtectedRoute component
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -88,6 +89,10 @@ const router = createBrowserRouter([
       {
         path: "edit-class/:id",
         element: <EditClassForm />,
+      },
+      {
+        path: "list-faculty",
+        element: <FacultyList />,
       },
     ],
   },
