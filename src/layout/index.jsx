@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -16,22 +16,20 @@ import {
   Button,
   Layout as LayoutAntd,
   Menu,
-  theme,
   Dropdown,
   Input,
+  Avatar,
 } from "antd";
 import { getMe } from "../services/user";
-import "./style.scss"; // Import the SCSS file
+import "./style.scss";
 
 const { Header, Sider, Content } = LayoutAntd;
 
 const Layout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [user, setUser] = useState(null);
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -49,16 +47,20 @@ const Layout = () => {
     } catch (error) {
       console.error("Failed to fetch user data:", error);
       if (error.response && error.response.status === 401) {
-        handleLogout();
+        handleTokenExpiration();
       }
     }
   };
 
-  const handleLogout = () => {
+  const handleTokenExpiration = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
     navigate("/login");
+  };
+
+  const handleLogout = () => {
+    handleTokenExpiration();
   };
 
   const userMenu = (
@@ -69,57 +71,56 @@ const Layout = () => {
     </Menu>
   );
 
+  const menuItems = [
+    {
+      key: "/list-user",
+      icon: <UserOutlined />,
+      label: "User",
+    },
+    {
+      key: "/list-class",
+      icon: <LaptopOutlined />,
+      label: "Class",
+    },
+    {
+      key: "/list-faculty",
+      icon: <GlobalOutlined />,
+      label: "Faculty",
+    },
+    {
+      key: "/dashboard",
+      icon: <DashboardOutlined />,
+      label: "Dashboard",
+    },
+  ];
+
   return (
-    <LayoutAntd className="layout">
-      <Sider trigger={null} collapsible collapsed={collapsed} className="sider">
-        <div className="logo" />
+    <LayoutAntd className="minimal-layout">
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        className="minimal-sider"
+      >
+        <div className="logo">{collapsed ? "CMS" : "CMS ADMIN"}</div>
         <Menu
-          theme="dark"
+          theme="light"
           mode="inline"
-          defaultSelectedKeys={["1"]}
-          items={[
-            {
-              key: "1",
-              icon: <UserOutlined />,
-              label: "User",
-              onClick: () => {
-                navigate("/list-user");
-              },
-            },
-            {
-              key: "2",
-              icon: <LaptopOutlined />,
-              label: "Class",
-              onClick: () => {
-                navigate("/list-class");
-              },
-            },
-            {
-              key: "3",
-              icon: <GlobalOutlined />,
-              label: "Faculty",
-              onClick: () => {
-                navigate("/list-faculty");
-              },
-            },
-            {
-              key: "4",
-              icon: <DashboardOutlined />,
-              label: "Dashboard",
-            },
-          ]}
+          selectedKeys={[location.pathname]}
+          items={menuItems}
+          onClick={({ key }) => navigate(key)}
+          className="minimal-menu"
         />
       </Sider>
       <LayoutAntd>
-        <Header className="header">
+        <Header className="minimal-header">
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
             className="collapse-button"
           />
-
-          <div className="header-icons">
+          <div className="header-right">
             <Input
               placeholder="Search"
               prefix={<SearchOutlined />}
@@ -129,22 +130,13 @@ const Layout = () => {
             <Button icon={<SettingOutlined />} className="header-button" />
             <Dropdown overlay={userMenu} trigger={["click"]}>
               <a onClick={(e) => e.preventDefault()} className="user-dropdown">
-                <UserOutlined style={{ marginRight: 8 }} />
+                <Avatar icon={<UserOutlined />} />
                 <span>{user ? user.username : "Loading..."}</span>
               </a>
             </Dropdown>
           </div>
         </Header>
-        <Content
-          className="content"
-          style={{
-            margin: "24px 16px",
-            padding: 24,
-            minHeight: 280,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}
-        >
+        <Content className="minimal-content">
           <Outlet />
         </Content>
       </LayoutAntd>

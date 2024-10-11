@@ -12,7 +12,6 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Lắng nghe sự kiện storage thay đổi
     const handleStorageChange = (e) => {
       if (e.key === "user") {
         const newUser = JSON.parse(e.newValue);
@@ -50,8 +49,6 @@ function Login() {
 
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-
-      // Kích hoạt sự kiện storage để thông báo cho các tab khác
       window.dispatchEvent(new Event("storage"));
 
       notification.success({

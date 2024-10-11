@@ -1,92 +1,177 @@
-.layout {
-  height: auto;
-  background-color: #f5f5f5; // Light gray background for a minimal look
+$primary-color: #1a1a1a;
+$secondary-color: #f5f5f5;
+$accent-color: #3498db;
+$text-color: #333;
+$border-radius: 4px;
+$transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 
-  .sider {
-    background-color: #2c3e50; // Dark blue-gray color for the sidebar
-    color: #fff;
+.minimal-layout {
+  min-height: 100vh;
+  background-color: $secondary-color;
 
-    // Ensure the menu takes the full height and uses the sidebar color
-    .ant-menu {
-      background-color: #2c3e50; // Match sidebar color
-      border-right: none; // Remove default border
-    }
+  .minimal-sider {
+    background-color: white;
+    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden; // Prevent menu items from overflowing during animation
 
-    .ant-menu-item {
-      font-weight: 600; // Make the font weight bolder
-      font-size: 16px; // Adjust font size if needed
-
-      // Ensure the selected item has the same background color as the sidebar
-      &.ant-menu-item-selected {
-        background-color: #2c3e50; // Match sidebar color
-      }
-
-      &:hover {
-        background-color: #3498db; // Highlight color on hover
-      }
-    }
-  }
-
-  .header {
-    background: #fff;
-    padding: 0 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #e8e8e8;
-
-    .collapse-button {
-      font-size: 16px;
-      width: 64px;
+    .logo {
       height: 64px;
-      color: #3498db; // Primary color for icon
-      transition: color 0.3s;
-
-      &:hover {
-        color: #2980b9; // Lighter shade on hover
-      }
-    }
-
-    .header-icons {
       display: flex;
       align-items: center;
+      justify-content: center;
+      color: $primary-color;
+      font-size: 18px;
+      font-weight: bold;
+      border-bottom: 1px solid $secondary-color;
+    }
 
-      .search-input {
-        width: 200px;
-        margin-right: 16px;
-      }
+    .minimal-menu {
+      border-right: none;
+      padding-top: 16px;
 
-      .header-button {
-        margin-left: 16px;
-        border: none;
-        background: transparent;
-        color: #3498db; // Primary icon color
-        transition: color 0.3s;
+      .ant-menu-item {
+        margin: 8px 16px;
+        padding: 0 24px;
+        border-radius: $border-radius;
+        transition: $transition;
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba($accent-color, 0.2),
+            transparent
+          );
+          transition: $transition;
+        }
 
         &:hover {
-          color: #2980b9; // Darker shade on hover
+          color: $accent-color;
+          transform: translateX(5px);
+
+          &::before {
+            left: 100%;
+          }
+        }
+
+        &.ant-menu-item-selected {
+          background-color: rgba($accent-color, 0.1);
+          color: $accent-color;
+          font-weight: 500;
+
+          &::after {
+            display: none;
+          }
+
+          &:hover {
+            transform: none;
+          }
         }
       }
     }
+  }
 
-    .user-dropdown {
-      color: rgba(0, 0, 0, 0.65);
-      display: flex;
-      align-items: center;
+  .minimal-header {
+    background: white;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    .collapse-button {
+      font-size: 18px;
+      border: none;
+      background: transparent;
+      color: $primary-color;
+      transition: $transition;
 
       &:hover {
-        color: #3498db; // Change color on hover
+        color: $accent-color;
+      }
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .search-input {
+        width: 200px;
+        transition: $transition;
+        border-radius: $border-radius;
+
+        &:focus {
+          width: 250px;
+          border-color: $accent-color;
+        }
+      }
+
+      .header-button {
+        background: transparent;
+        border: none;
+        font-size: 18px;
+        color: $primary-color;
+        transition: $transition;
+
+        &:hover {
+          color: $accent-color;
+        }
+      }
+
+      .user-dropdown {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+
+        .ant-avatar {
+          background-color: $accent-color;
+          transition: $transition;
+        }
+
+        span {
+          color: $text-color;
+        }
+
+        &:hover {
+          .ant-avatar {
+            background-color: darken($accent-color, 10%);
+          }
+          span {
+            color: $accent-color;
+          }
+        }
       }
     }
   }
 
-  .content {
-    flex: 1; // Allow content area to take remaining space
-    margin: 24px 16px;
+  .minimal-content {
+    margin: 24px;
     padding: 24px;
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    overflow: auto; // Enable scrolling
+    background: white;
+    border-radius: $border-radius;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Add responsive styles
+@media (max-width: 768px) {
+  .minimal-layout {
+    .minimal-header {
+      .header-right {
+        .search-input {
+          display: none;
+        }
+      }
+    }
   }
 }

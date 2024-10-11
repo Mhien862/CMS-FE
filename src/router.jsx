@@ -11,6 +11,7 @@ import Layout from "./layout";
 import LayoutTeacher from "./layout/layoutTeacher";
 import ClassTeacher from "./teacher/classTeacher";
 import FacultyList from "./admin/Faculty/listfaculty";
+import ClassPage from "./teacher/classPage";
 
 // ProtectedRoute component
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -108,10 +109,32 @@ const router = createBrowserRouter([
         path: "class-teacher",
         element: <ClassTeacher />,
       },
+      {
+        path: "class/:classId",
+        element: <ClassPage />,
+      },
+    ],
+  },
+  {
+    path: "/student",
+    element: (
+      <ProtectedRoute allowedRoles={[2]}>
+        <LayoutTeacher />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: "class-student",
+        element: <ClassTeacher />,
+      },
     ],
   },
   {
     path: "/unauthorized",
+    element: <div>You are not authorized to access this page.</div>,
+  },
+  {
+    path: "*",
     element: <div>You are not authorized to access this page.</div>,
   },
 ]);

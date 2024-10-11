@@ -6,13 +6,12 @@ import {
   Spin,
   Alert,
   Button,
-  Dropdown,
-  Menu,
+  Typography,
   Input,
   Select,
-  Space,
+  Avatar,
 } from "antd";
-import { EllipsisOutlined, PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { getAllClass, getListTeacher } from "../../services/class";
 import { useFaculty } from "../../hook/useFaculty";
 import "./style.scss";
@@ -21,6 +20,7 @@ import { deleteClass } from "../../services/class";
 import { Modal } from "antd";
 
 const { confirm } = Modal;
+const { Title, Text } = Typography;
 const { Search } = Input;
 const { Option } = Select;
 
@@ -168,52 +168,36 @@ const ClassList = () => {
     setSelectedTeacher(null);
   };
 
-  const menu = (classId) => (
-    <Menu>
-      <Menu.Item key="edit" onClick={() => handleEditClass(classId)}>
-        Edit
-      </Menu.Item>
-      <Menu.Item key="delete" onClick={() => showDeleteConfirm(classId)}>
-        Delete
-      </Menu.Item>
-    </Menu>
-  );
-
   if (loading) return <Spin size="large" />;
   if (error) return <Alert message={error} type="error" />;
 
   return (
-    <div className="list-class" style={{ padding: "24px" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "24px",
-        }}
-      >
-        <h1 style={{ fontSize: "24px", fontWeight: "bold" }}>All Classes</h1>
+    <div className="class-list">
+      <div className="class-list__header">
+        <Title level={2}>All Classes</Title>
         <Button
           type="primary"
           onClick={handleCreateClass}
           icon={<PlusOutlined />}
+          className="create-class-btn"
         >
           Create Class
         </Button>
       </div>
 
-      <Space style={{ marginBottom: "16px" }} size="middle">
+      <div className="class-list__filters">
         <Search
           placeholder="Search classes"
           onChange={handleSearch}
           value={searchTerm}
-          style={{ width: 200 }}
+          prefix={<SearchOutlined />}
+          className="search-input"
         />
         <Select
-          style={{ width: 200 }}
           placeholder="Select Faculty"
           onChange={handleFacultyChange}
           value={selectedFaculty}
+          className="faculty-select"
         >
           {faculty.map((f) => (
             <Option key={f.id} value={f.id}>
@@ -223,10 +207,10 @@ const ClassList = () => {
         </Select>
         {selectedFaculty && (
           <Select
-            style={{ width: 200 }}
             placeholder="Select Teacher"
             onChange={handleTeacherChange}
             value={selectedTeacher}
+            className="teacher-select"
           >
             {filteredTeachers.map((t) => (
               <Option key={t.id} value={t.id}>
@@ -235,44 +219,61 @@ const ClassList = () => {
             ))}
           </Select>
         )}
-        <Button onClick={clearFilters}>Clear Filters</Button>
-      </Space>
+        <Button onClick={clearFilters} className="clear-filters-btn">
+          Clear Filters
+        </Button>
+      </div>
 
-      <Row gutter={[16, 16]}>
-        {filteredClasses.map((classItem) => (
-          <Col xs={24} sm={12} md={8} lg={6} key={classItem.id}>
-            <Card
-              hoverable
-              title={classItem.name}
-              extra={
-                <Dropdown overlay={menu(classItem.id)} trigger={["click"]}>
-                  <a onClick={(e) => e.preventDefault()}>
-                    <EllipsisOutlined style={{ fontSize: "20px" }} />
-                  </a>
-                </Dropdown>
-              }
-              style={{
-                height: "100%",
-                borderRadius: "10px",
-                boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-              }}
-              className="class-card"
-            >
-              <p>
-                <strong>Faculty: </strong>
-                {getFacultyName(classItem.faculty_id)}
-              </p>
-              <p>
-                <strong>Teacher: </strong>
-                {getTeacherName(classItem.teacher_id)}
-              </p>
-              <p>
-                <strong>Class ID: </strong> {classItem.id}
-              </p>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+      {loading ? (
+        <div className="loading-container">
+          <Spin size="large" />
+        </div>
+      ) : error ? (
+        <Alert message={error} type="error" />
+      ) : (
+        <Row gutter={[24, 24]} className="class-list__grid">
+          {filteredClasses.map((classItem) => (
+            <Col xs={24} sm={12} md={8} lg={6} key={classItem.id}>
+              <Card
+                hoverable
+                className="class-card"
+                actions={[
+                  <Button
+                    key={`edit-${classItem.id}`}
+                    onClick={() => handleEditClass(classItem.id)}
+                    type="link"
+                  >
+                    Edit
+                  </Button>,
+                  <Button
+                    key={`delete-${classItem.id}`}
+                    onClick={() => showDeleteConfirm(classItem.id)}
+                    type="link"
+                    danger
+                  >
+                    Delete
+                  </Button>,
+                ]}
+              >
+                <div className="class-card__header">
+                  <Avatar size={64} className="class-avatar">
+                    {classItem.name.charAt(0)}
+                  </Avatar>
+                  <Title level={4}>{classItem.name}</Title>
+                </div>
+                <div className="class-card__content">
+                  <Text strong>Faculty:</Text>
+                  <Text>{getFacultyName(classItem.faculty_id)}</Text>
+                  <Text strong>Teacher:</Text>
+                  <Text>{getTeacherName(classItem.teacher_id)}</Text>
+                  <Text strong>Class ID:</Text>
+                  <Text>{classItem.id}</Text>
+                </div>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
     </div>
   );
 };

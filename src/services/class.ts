@@ -7,6 +7,10 @@ interface ClassData {
     password: string;
   }
 
+  interface FolderData {
+    name: string;
+}
+
 export const getAllClass = async () => {
     const response = await axiosInstance.get("class/listClasses");
     return  response.data;
@@ -40,4 +44,33 @@ export const deleteClass = async (id: string) => {
 export const getClassesByTeacherId = async (teacherId) => {
     const response = await axiosInstance.get(`class/teacher/${teacherId}`);
     return response.data;
+  };
+
+
+export const teacherCheckClass = async (teacherId ,classId) => {
+    const response = await axiosInstance.post("class/teacherCheckClass", { teacherId, classId });
+    return response.data;
+};
+
+export const createFolder = async (classId: string | number, data: FolderData) => {
+    if (typeof classId === 'object') {
+        throw new Error('Invalid classId provided');
+    }
+    const response = await axiosInstance.post(`class/${classId}/createFolder`, data);
+    return response.data;
+};
+
+export const getFoldersByClassId = async (classId) => {
+    try {
+      const response = await axiosInstance.get(`/class/${classId}/folders`);  
+      if (response.data && response.data.folders) {
+        return response.data.folders;
+      } else if (Array.isArray(response.data)) {
+        return response.data;
+      } else {
+        throw new Error("Unexpected data structure from API");
+      }
+    } catch (error) {
+      throw error;
+    }
   };

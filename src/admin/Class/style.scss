@@ -1,35 +1,159 @@
-.list-class {
-  height: 100vh;
-  padding: 20px;
+.class-list {
+  padding: 32px;
+  // background-color: #f0f2f5;
+  min-height: 100vh;
 
-  .class-card {
-    transition: transform 0.2s, box-shadow 0.2s;
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
 
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    h2 {
+      margin: 0;
+      color: #1890ff;
+    }
+
+    .create-class-btn {
+      background-color: #1890ff;
+      border-color: #1890ff;
+
+      &:hover {
+        background-color: #0582f7;
+        border-color: #0582f7;
+      }
     }
   }
 
-  h1 {
-    font-size: 2rem;
-    color: #333;
+  &__filters {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+
+    .search-input,
+    .faculty-select,
+    .teacher-select {
+      min-width: 200px;
+    }
+
+    .clear-filters-btn {
+      background-color: #f5f5f5;
+      border-color: #d9d9d9;
+      color: #595959;
+
+      &:hover {
+        background-color: #e8e8e8;
+        border-color: #d9d9d9;
+      }
+    }
   }
 
-  button {
-    border-radius: 4px;
-    font-weight: bold;
+  &__grid {
+    margin-top: 24px;
+  }
+}
+
+.class-card {
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
   }
 
-  .ant-select {
-    border-radius: 4px;
+  &__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 0;
+    background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+    color: white;
+
+    .ant-avatar {
+      background-color: white;
+      color: #1890ff;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+
+    h4 {
+      color: white;
+      margin: 0;
+    }
   }
 
-  .ant-input {
-    border-radius: 4px;
+  &__content {
+    padding: 16px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+    align-items: center;
+
+    .ant-typography-strong {
+      color: #8c8c8c;
+    }
   }
 
-  .ant-space {
-    margin-bottom: 16px;
+  .ant-card-actions {
+    background-color: #fafafa;
+    border-top: 1px solid #f0f0f0;
+  }
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}
+
+@media (max-width: 768px) {
+  .class-list {
+    padding: 16px;
+
+    &__header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    &__filters {
+      flex-direction: column;
+
+      .search-input,
+      .faculty-select,
+      .teacher-select,
+      .clear-filters-btn {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.class-list__grid {
+  .ant-col {
+    animation: fadeInUp 0.5s ease-out;
+    animation-fill-mode: both;
+
+    @for $i from 1 through 20 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.1}s;
+      }
+    }
   }
 }
