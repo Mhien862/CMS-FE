@@ -8,35 +8,53 @@ import {
   Button,
   message,
   notification,
+  Input,
+  Empty,
 } from "antd";
-import "./style.scss";
+import {
+  SearchOutlined,
+  LoginOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import "./style.scss";
 
 const { Title, Text } = Typography;
 
 function TeacherClasses() {
   const [classes, setClasses] = useState([]);
+  const [filteredClasses, setFilteredClasses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchClasses = async () => {
-      try {
-        const user = JSON.parse(localStorage.getItem("user"));
-        if (user && user.id) {
-          const response = await getClassesByTeacherId(user.id);
-          setClasses(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching classes:", error);
-        message.error("Failed to fetch classes. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchClasses();
   }, []);
+
+  useEffect(() => {
+    setFilteredClasses(
+      classes.filter((classItem) =>
+        classItem.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm, classes]);
+
+  const fetchClasses = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user && user.id) {
+        const response = await getClassesByTeacherId(user.id);
+        setClasses(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching classes:", error);
+      message.error("Failed to fetch classes. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleEnterClass = async (classItem) => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -79,50 +97,59 @@ function TeacherClasses() {
   };
 
   if (loading) {
-    return <Spin size="large" />;
+    return (
+      <div className="loading-container">
+        <Spin size="large" />
+      </div>
+    );
   }
 
   return (
-    <div className="my-class">
-      <Title level={2} style={{ marginBottom: 16 }}>
-        My Classes
-      </Title>
-      <List
-        grid={{ gutter: 16, column: 3 }}
-        dataSource={classes}
-        renderItem={(classItem) => (
-          <List.Item>
-            <Card
-              hoverable
-              className="class-card"
-              bodyStyle={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}
-            >
-              <div className="class-info">
-                <Title level={4} style={{ textAlign: "center" }}>
-                  {classItem.name}
-                </Title>
-                <Text className="faculty-name">{classItem.faculty_name}</Text>
-              </div>
-              <div className="class-actions">
-                <Button
-                  type="primary"
-                  onClick={() => handleEnterClass(classItem)}
-                >
-                  Enter Class
-                </Button>
-                <Button type="default" style={{ marginTop: 8 }}>
-                  View Details
-                </Button>
-              </div>
-            </Card>
-          </List.Item>
-        )}
+    <div className="teacher-classes">
+      <Title level={2}>My Classes</Title>
+      <Input
+        prefix={<SearchOutlined />}
+        placeholder="Search classes"
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
       />
+      {filteredClasses.length > 0 ? (
+        <List
+          grid={{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 3, xl: 3, xxl: 4 }}
+          dataSource={filteredClasses}
+          renderItem={(classItem) => (
+            <List.Item>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Card hoverable className="class-card">
+                  <Title level={4}>{classItem.name}</Title>
+                  <Text className="faculty-name">{classItem.faculty_name}</Text>
+                  <div className="class-actions">
+                    <Button
+                      type="primary"
+                      icon={<LoginOutlined />}
+                      onClick={() => handleEnterClass(classItem)}
+                    >
+                      Enter Class
+                    </Button>
+                    <Button type="default" icon={<InfoCircleOutlined />}>
+                      View Details
+                    </Button>
+                  </div>
+                </Card>
+              </motion.div>
+            </List.Item>
+          )}
+        />
+      ) : (
+        <Empty
+          description="No classes found"
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+        />
+      )}
     </div>
   );
 }

@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
+  MenuOutlined,
   DashboardOutlined,
   UserOutlined,
-  LaptopOutlined,
+  BookOutlined,
   LogoutOutlined,
+  BellOutlined,
 } from "@ant-design/icons";
-import { Button, Layout as LayoutAntd, Menu, theme, Dropdown } from "antd";
+import { Layout, Menu, theme, Dropdown, Avatar, Badge, Tooltip } from "antd";
+import { motion } from "framer-motion";
 import { getMe } from "../services/user";
+import "./style.scss";
 
-const { Header, Sider, Content } = LayoutAntd;
+const { Header, Sider, Content } = Layout;
 
 const LayoutTeacher = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -20,6 +22,7 @@ const LayoutTeacher = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -51,82 +54,87 @@ const LayoutTeacher = () => {
 
   const userMenu = (
     <Menu>
-      <Menu.Item key="1" onClick={handleLogout}>
+      <Menu.Item key="profile">
+        <UserOutlined /> Profile
+      </Menu.Item>
+      <Menu.Item key="logout" onClick={handleLogout}>
         <LogoutOutlined /> Logout
       </Menu.Item>
     </Menu>
   );
 
+  const menuItems = [
+    {
+      key: "/teacher/class-teacher",
+      icon: <BookOutlined />,
+      label: "Classes",
+    },
+    // {
+    //   key: "/teacher/dashboard",
+    //   icon: <DashboardOutlined />,
+    //   label: "Dashboard",
+    // },
+  ];
+
   return (
-    <LayoutAntd>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="demo-logo-vertical" />
+    <Layout className="layout-teacher">
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        className="sidebar"
+        theme="light"
+      >
+        <div className="logo">{collapsed ? "CMS" : "CMS TEACHER"}</div>
         <Menu
-          theme="dark"
           mode="inline"
-          defaultSelectedKeys={["1"]}
-          items={[
-            {
-              key: "1",
-              icon: <LaptopOutlined />,
-              label: "Class",
-              onClick: () => {
-                navigate("/teacher/class-teacher");
-              },
-            },
-            {
-              key: "2",
-              icon: <DashboardOutlined />,
-              label: "Dashboard",
-            },
-          ]}
+          selectedKeys={[location.pathname]}
+          items={menuItems}
+          onClick={({ key }) => navigate(key)}
         />
       </Sider>
-      <LayoutAntd>
-        <Header
-          style={{
-            padding: 0,
-            background: colorBgContainer,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: "16px",
-              width: 64,
-              height: 64,
-            }}
-          />
-          <div style={{ marginRight: 16 }}>
-            <Dropdown overlay={userMenu} trigger={["click"]}>
-              <a
-                onClick={(e) => e.preventDefault()}
-                style={{ color: "rgba(0, 0, 0, 0.65)" }}
-              >
-                <UserOutlined style={{ marginRight: 8 }} />
-                <span>{user ? user.username : "Loading..."}</span>
-              </a>
-            </Dropdown>
-          </div>
+      <Layout>
+        <Header className="header" style={{ background: colorBgContainer }}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="header-content"
+          >
+            <MenuOutlined
+              className="trigger"
+              onClick={() => setCollapsed(!collapsed)}
+            />
+            <div className="header-right">
+              <Tooltip title="Notifications">
+                <Badge count={5} className="notification-badge">
+                  <BellOutlined className="notification-icon" />
+                </Badge>
+              </Tooltip>
+              <Dropdown overlay={userMenu} trigger={["click"]}>
+                <a
+                  onClick={(e) => e.preventDefault()}
+                  className="user-dropdown"
+                >
+                  <Avatar
+                    src={user?.avatar || "https://joeschmoe.io/api/v1/random"}
+                  />
+                  <span className="username">
+                    {user ? user.username : "Loading..."}
+                  </span>
+                </a>
+              </Dropdown>
+            </div>
+          </motion.div>
         </Header>
         <Content
-          style={{
-            margin: "24px 16px",
-            padding: 24,
-            minHeight: 280,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}
+          className="main-content"
+          style={{ background: colorBgContainer, borderRadius: borderRadiusLG }}
         >
           <Outlet />
         </Content>
-      </LayoutAntd>
-    </LayoutAntd>
+      </Layout>
+    </Layout>
   );
 };
 

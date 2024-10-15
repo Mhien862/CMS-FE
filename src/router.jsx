@@ -12,6 +12,11 @@ import LayoutTeacher from "./layout/layoutTeacher";
 import ClassTeacher from "./teacher/classTeacher";
 import FacultyList from "./admin/Faculty/listfaculty";
 import ClassPage from "./teacher/classPage";
+import StudentAllClasses from "./student/allClassStudent";
+import LayoutStudent from "./layout/layoutStudent";
+import ClassFolders from "./student/myClass";
+import SubmitAssignment from "./student/submitAssignment";
+import FolderPage from "./teacher/folderPage";
 
 // ProtectedRoute component
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -113,19 +118,31 @@ const router = createBrowserRouter([
         path: "class/:classId",
         element: <ClassPage />,
       },
+      {
+        path: "class/:classId/folder/:folderId",
+        element: <FolderPage />,
+      },
     ],
   },
   {
     path: "/student",
     element: (
-      <ProtectedRoute allowedRoles={[2]}>
-        <LayoutTeacher />
+      <ProtectedRoute allowedRoles={[3]}>
+        <LayoutStudent />
       </ProtectedRoute>
     ),
     children: [
       {
         path: "class-student",
-        element: <ClassTeacher />,
+        element: <StudentAllClasses />,
+      },
+      {
+        path: "class/:classId/folder",
+        element: <ClassFolders />,
+      },
+      {
+        path: "class/:classId/folder/:folderId/submit",
+        element: <SubmitAssignment />,
       },
     ],
   },

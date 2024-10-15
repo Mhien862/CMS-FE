@@ -87,11 +87,11 @@ const Layout = () => {
       icon: <GlobalOutlined />,
       label: "Faculty",
     },
-    {
-      key: "/dashboard",
-      icon: <DashboardOutlined />,
-      label: "Dashboard",
-    },
+    // {
+    //   key: "/dashboard",
+    //   icon: <DashboardOutlined />,
+    //   label: "Dashboard",
+    // },
   ];
 
   return (

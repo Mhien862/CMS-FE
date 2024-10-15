@@ -22,6 +22,7 @@ import {
   createFolder,
   getFoldersByClassId,
 } from "../services/class";
+import "./style.scss";
 
 const { Title, Text } = Typography;
 
@@ -78,6 +79,9 @@ const ClassPage = () => {
   }, [classId, fetchClassInfo, fetchFolders]);
 
   const showModal = () => setIsModalVisible(true);
+  const handleFolderClick = (folderId) => {
+    navigate(`/teacher/class/${classId}/folder/${folderId}`);
+  };
 
   const handleOk = async () => {
     try {
@@ -91,13 +95,6 @@ const ClassPage = () => {
         message: "Failed to create folder",
         description: error.response?.data?.message || "An error occurred",
       });
-      if (error.response?.status === 403) {
-        notification.warning({
-          message: "Access Denied",
-          description:
-            "You may not have permission to create folders in this class.",
-        });
-      }
     }
   };
 
@@ -107,18 +104,7 @@ const ClassPage = () => {
   };
 
   if (loading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <Spin size="large" />
-      </div>
-    );
+    return <Spin size="large" className="page-loader" />;
   }
 
   if (!classInfo) {
@@ -126,11 +112,10 @@ const ClassPage = () => {
   }
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="class-page">
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
-        <Title level={2}>{classInfo.name}</Title>
-
-        <Card>
+        <Card className="class-info-card">
+          <Title level={2}>{classInfo.name}</Title>
           <Space direction="vertical">
             <Text>
               <strong>Faculty:</strong> {classInfo.faculty_name}
@@ -141,7 +126,7 @@ const ClassPage = () => {
           </Space>
         </Card>
 
-        <div>
+        <div className="folder-actions">
           <Button type="primary" onClick={showModal} icon={<PlusOutlined />}>
             Create Folder
           </Button>
@@ -163,24 +148,27 @@ const ClassPage = () => {
         <Title level={3}>Folders</Title>
         {Array.isArray(folders) && folders.length > 0 ? (
           <List
+            grid={{ gutter: 16, column: 3 }}
             dataSource={folders}
             renderItem={(folder) => (
               <List.Item>
-                <Card style={{ width: "100%" }} hoverable>
+                <Card
+                  hoverable
+                  className="folder-card"
+                  onClick={() => handleFolderClick(folder.id)}
+                >
                   <Space direction="vertical">
                     <Space>
-                      <FolderOutlined
-                        style={{ fontSize: "24px", color: "#1890ff" }}
-                      />
-                      <Text strong style={{ fontSize: "18px" }}>
+                      <FolderOutlined className="folder-icon" />
+                      <Text strong className="folder-name">
                         {folder.name || "Unnamed Folder"}
                       </Text>
                     </Space>
-                    <Space>
+                    <Space className="folder-info">
                       <UserOutlined />
                       <Text>Created by: {folder.created_by || "Unknown"}</Text>
                     </Space>
-                    <Space>
+                    <Space className="folder-info">
                       <CalendarOutlined />
                       <Text>
                         Created at:{" "}

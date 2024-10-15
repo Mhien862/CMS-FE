@@ -13,10 +13,13 @@
     "@ant-design/icons": "^5.5.1",
     "antd": "^5.21.2",
     "axios": "^1.7.7",
+    "framer-motion": "^11.11.9",
+    "lucide-react": "^0.453.0",
     "notifyjs": "^3.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.1"
+    "react-router-dom": "^6.26.1",
+    "sass": "^1.79.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

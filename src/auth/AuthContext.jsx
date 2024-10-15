@@ -37,7 +37,7 @@ function Login() {
         navigate("/teacher/class-teacher");
         break;
       default:
-        navigate("/dashboard");
+        navigate("/student/class-student");
         break;
     }
   };

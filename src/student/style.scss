@@ -1,0 +1,303 @@
+.student-all-classes {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+
+  .search-input {
+    margin-bottom: 2rem;
+    max-width: 400px;
+  }
+
+  .class-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .class-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &.selected {
+      border: 2px solid #1890ff;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #1890ff;
+    }
+
+    p {
+      margin-bottom: 0.5rem;
+      color: #666;
+    }
+  }
+
+  .join-class-form {
+    margin-top: 2rem;
+    padding: 2rem;
+    background-color: #f0f2f5;
+    border-radius: 8px;
+
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    input {
+      margin-bottom: 1rem;
+    }
+
+    button {
+      background-color: #1890ff;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #40a9ff;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .student-all-classes {
+    padding: 1rem;
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    .class-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+.class-folders {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #1890ff;
+  }
+
+  .class-info-card {
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+
+      .info-icon {
+        margin-right: 0.5rem;
+        color: #1890ff;
+      }
+    }
+  }
+
+  .folders-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+
+  .folder-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .folder-item {
+    border: none;
+  }
+
+  .folder-card {
+    height: 100%;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .folder-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+
+      .folder-icon {
+        font-size: 24px;
+        color: #1890ff;
+        background-color: #e6f7ff;
+        margin-right: 1rem;
+      }
+
+      .folder-name {
+        font-size: 1.2rem;
+        color: #333;
+      }
+    }
+
+    .folder-info {
+      .info-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+
+        .info-icon {
+          margin-right: 0.5rem;
+          color: #1890ff;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .class-folders {
+    padding: 1rem;
+
+    h2 {
+      font-size: 2rem;
+    }
+
+    .folder-list {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+.submit-assignment {
+  display: flex;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .submit-form,
+  .submitted-assignments {
+    flex: 1;
+  }
+
+  .divider {
+    height: auto;
+    margin: 0 2rem;
+  }
+
+  h3 {
+    font-size: 1.8rem;
+    color: #1890ff;
+    margin-bottom: 1.5rem;
+  }
+
+  .ant-upload-drag {
+    border: 2px dashed #d9d9d9;
+    background: #fafafa;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: border-color 0.3s;
+
+    &:hover {
+      border-color: #1890ff;
+    }
+
+    .ant-upload-drag-icon {
+      color: #1890ff;
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .ant-upload-text {
+      font-size: 16px;
+      color: rgba(0, 0, 0, 0.85);
+      margin-bottom: 8px;
+    }
+
+    .ant-upload-hint {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.45);
+    }
+  }
+
+  .assignment-card {
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .ant-card-head-title {
+      display: flex;
+      align-items: center;
+    }
+
+    .file-icon {
+      font-size: 1.2rem;
+      color: #1890ff;
+      margin-right: 0.5rem;
+    }
+
+    .assignment-info,
+    .assignment-grade {
+      display: flex;
+      align-items: center;
+      margin-top: 0.5rem;
+
+      .anticon {
+        margin-right: 0.5rem;
+        color: #1890ff;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .submit-assignment {
+    flex-direction: column;
+    padding: 1rem;
+
+    .divider {
+      display: none;
+    }
+
+    .submit-form,
+    .submitted-assignments {
+      margin-bottom: 2rem;
+    }
+  }
+}
