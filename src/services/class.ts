@@ -21,6 +21,11 @@ interface GradeData {
   grade: number;
 }
 
+interface EnrollmentStatus {
+  isEnrolled: boolean;
+  enrollmentDetails?: any;
+}
+
 export const getAllClass = async () => {
   const response = await axiosInstance.get("class/listClasses");
   return response.data;
@@ -84,16 +89,33 @@ export const getFoldersByClassId = async (classId: string) => {
   }
 };
 
-// New student-related functions
+
 export const getClassesByFaculty = async (facultyId: string) => {
   const response = await axiosInstance.get(`/class/faculty/${facultyId}/classes`);
   return response.data;
 };
 
-export const joinClass = async (classId: string, password: string) => {
-  const response = await axiosInstance.post(`/class/${classId}/join`, { password });
-  return response.data;
+export const checkEnrollmentStatus = async (classId: string): Promise<EnrollmentStatus> => {
+  try {
+    const response = await axiosInstance.get(`/class/${classId}/enrollment-status`);
+    return response.data;
+  } catch (error) {
+    console.error('Error checking enrollment status:', error);
+    throw error;
+  }
 };
+
+
+export const joinClass = async (classId: string, password: string) => {
+  try {
+    const response = await axiosInstance.post(`/class/${classId}/join`, { password });
+    return response.data;
+  } catch (error) {
+    console.error('Error joining class:', error);
+    throw error;
+  }
+};
+
 
 export const getFoldersForStudent = async (classId: string) => {
   const response = await axiosInstance.get(`/class/${classId}/FolderStudent`);
@@ -136,6 +158,16 @@ export const gradeAssignment = async (classId: string, assignmentId: string, gra
     return response.data;
   } catch (error) {
     console.error('Error grading assignment:', error);
+    throw error;
+  }
+};
+
+export const deleteAssignment = async (classId: string, folderId: string, assignmentId: string) => {
+  try {
+    const response = await axiosInstance.delete(`/class/${classId}/folders/${folderId}/assignments/${assignmentId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting assignment:', error);
     throw error;
   }
 };

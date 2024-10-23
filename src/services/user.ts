@@ -1,5 +1,9 @@
 import axiosInstance from "../axiosInstance";
 
+interface PasswordUpdateData {
+    newPassword: string;
+}
+
 
 export const getUser = async () => {
     const response = await axiosInstance.get("user/listUser");
@@ -23,6 +27,12 @@ export const updateUser = async (id: string, data: any) => {
 
 export const updateStatusUser = async (id: string, data: any) => {
     const response = await axiosInstance.put(`user/${id}/status`, data);
+    return response.data;
+}
+export const updateUserPassword = async (id: string, password: string) => {
+    const response = await axiosInstance.put(`user/${id}/password`, {
+        newPassword: password
+    });
     return response.data;
 }
 

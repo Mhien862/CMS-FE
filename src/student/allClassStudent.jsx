@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { Input, Button, notification } from "antd";
 import { useNavigate } from "react-router-dom";
-import { getClassesByFaculty, joinClass } from "../services/class";
+import {
+  getClassesByFaculty,
+  joinClass,
+  checkEnrollmentStatus,
+} from "../services/class";
 import { motion } from "framer-motion";
 import "./style.scss";
 
@@ -10,6 +14,7 @@ const StudentAllClasses = () => {
   const [selectedClass, setSelectedClass] = useState(null);
   const [classPassword, setClassPassword] = useState("");
   const [loading, setLoading] = useState(true);
+  const [joiningClass, setJoiningClass] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
@@ -33,8 +38,31 @@ const StudentAllClasses = () => {
     }
   };
 
-  const handleClassSelect = (classItem) => {
+  const handleClassSelect = async (classItem) => {
     setSelectedClass(classItem);
+    setClassPassword("");
+    setJoiningClass(true);
+
+    try {
+      const status = await checkEnrollmentStatus(classItem.id);
+      if (status.isEnrolled) {
+        navigate(`/student/class/${classItem.id}/folder`);
+      } else {
+        setJoiningClass(false);
+      }
+    } catch (error) {
+      setJoiningClass(false);
+      if (error.response?.status === 403) {
+        // Hiển thị form nhập password
+        setSelectedClass(classItem);
+      } else {
+        notification.error({
+          message: "Error",
+          description:
+            error.response?.data?.message || "Failed to check class status",
+        });
+      }
+    }
   };
 
   const handleJoinClass = async () => {
@@ -42,6 +70,13 @@ const StudentAllClasses = () => {
       notification.warning({ message: "Please select a class first" });
       return;
     }
+
+    if (!classPassword.trim()) {
+      notification.warning({ message: "Please enter the class password" });
+      return;
+    }
+
+    setJoiningClass(true);
     try {
       await joinClass(selectedClass.id, classPassword);
       notification.success({ message: "Successfully joined the class" });
@@ -49,8 +84,11 @@ const StudentAllClasses = () => {
     } catch (error) {
       notification.error({
         message: "Failed to join class",
-        description: error.response?.data?.message || "An error occurred",
+        description: error.response?.data?.message || "Incorrect password",
       });
+      setClassPassword("");
+    } finally {
+      setJoiningClass(false);
     }
   };
 
@@ -88,20 +126,27 @@ const StudentAllClasses = () => {
           </motion.div>
         ))}
       </div>
-      {selectedClass && (
+
+      {selectedClass && !joiningClass && (
         <motion.div
           className="join-class-form"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
           <h2>Join {selectedClass.name}</h2>
-          <Input
+          <Input.Password
             placeholder="Enter class password"
-            type="password"
             value={classPassword}
             onChange={(e) => setClassPassword(e.target.value)}
+            onPressEnter={handleJoinClass}
           />
-          <Button onClick={handleJoinClass}>Join Class</Button>
+          <Button
+            type="primary"
+            onClick={handleJoinClass}
+            loading={joiningClass}
+          >
+            Join Class
+          </Button>
         </motion.div>
       )}
     </div>

@@ -1,6 +1,20 @@
 import { useState, useEffect } from "react";
-import { Table, Button, Dropdown, Menu, Modal, Input, Select } from "antd";
-import { getUser, deleteUser, updateStatusUser } from "../../services/user";
+import {
+  Table,
+  Button,
+  Dropdown,
+  Menu,
+  Modal,
+  Input,
+  Select,
+  Form,
+} from "antd";
+import {
+  getUser,
+  deleteUser,
+  updateStatusUser,
+  updateUserPassword,
+} from "../../services/user";
 import { useNavigate } from "react-router-dom";
 import { useRole } from "../../hook/useRole";
 import { useFaculty } from "../../hook/useFaculty";
@@ -10,6 +24,7 @@ import {
   DeleteOutlined,
   ApiOutlined,
   PlusOutlined,
+  LockOutlined,
 } from "@ant-design/icons";
 import "./style.scss";
 
@@ -28,12 +43,14 @@ const ListUser = () => {
   const { faculty } = useFaculty();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [isPasswordModalVisible, setIsPasswordModalVisible] = useState(false);
+  const [form] = Form.useForm();
 
   const getUsers = async () => {
     try {
       const response = await getUser();
       setUsers(response.data);
-      setFilteredUsers(response.data); // Set initial filtered users to full user list
+      setFilteredUsers(response.data);
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -45,25 +62,21 @@ const ListUser = () => {
     getUsers();
   }, []);
 
-  // Handle search input change
   const handleSearch = (value) => {
     setSearchTerm(value);
     filterUsers(value, selectedRole, selectedFaculty);
   };
 
-  // Handle role select change
   const handleRoleChange = (value) => {
     setSelectedRole(value);
     filterUsers(searchTerm, value, selectedFaculty);
   };
 
-  // Handle faculty select change
   const handleFacultyChange = (value) => {
     setSelectedFaculty(value);
     filterUsers(searchTerm, selectedRole, value);
   };
 
-  // Filter users based on search term, role, and faculty
   const filterUsers = (searchTerm, role, faculty) => {
     const filtered = users.filter((user) => {
       const matchesUsername = user.username
@@ -79,12 +92,11 @@ const ListUser = () => {
     setFilteredUsers(filtered);
   };
 
-  // Clear all filters and search
   const handleClearFilters = () => {
     setSearchTerm("");
     setSelectedRole(null);
     setSelectedFaculty(null);
-    setFilteredUsers(users); // Reset to full user list
+    setFilteredUsers(users);
   };
 
   const handleCreateUser = () => {
@@ -95,7 +107,7 @@ const ListUser = () => {
     try {
       await deleteUser(id);
       setUsers(users.filter((user) => user.id !== id));
-      setFilteredUsers(filteredUsers.filter((user) => user.id !== id)); // Update filtered users too
+      setFilteredUsers(filteredUsers.filter((user) => user.id !== id));
     } catch (error) {
       console.error(error);
     }
@@ -153,6 +165,13 @@ const ListUser = () => {
       >
         {record.is_active ? "Deactivate" : "Activate"}
       </Menu.Item>
+      <Menu.Item
+        key="changePassword"
+        icon={<LockOutlined />}
+        onClick={() => showPasswordModal(record.id)}
+      >
+        Change Password
+      </Menu.Item>
     </Menu>
   );
 
@@ -174,10 +193,43 @@ const ListUser = () => {
   const handleUpdateStatusUser = async (id, newStatus) => {
     try {
       await updateStatusUser(id, { is_active: newStatus });
-      getUsers(); // Refresh the user list after updating the status
+      getUsers();
     } catch (error) {
       console.error("Error updating user status:", error);
     }
+  };
+
+  const handleChangePassword = async (values) => {
+    try {
+      if (values.newPassword !== values.confirmPassword) {
+        Modal.error({
+          title: "Error",
+          content: "Passwords do not match!",
+        });
+        return;
+      }
+
+      await updateUserPassword(selectedUserId, values.newPassword);
+
+      Modal.success({
+        title: "Success",
+        content: "Password has been updated successfully!",
+      });
+      setIsPasswordModalVisible(false);
+      form.resetFields();
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        "Failed to update password. Please try again.";
+      Modal.error({
+        title: "Error",
+        content: errorMessage,
+      });
+    }
+  };
+  const showPasswordModal = (userId) => {
+    setSelectedUserId(userId);
+    setIsPasswordModalVisible(true);
   };
 
   const columns = [
@@ -241,20 +293,20 @@ const ListUser = () => {
           Create User
         </Button>
       </div>
-      {/* Search Bar */}
+
       <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
         <Search
           placeholder="Search by username or email"
-          onChange={(e) => handleSearch(e.target.value)} // Call handleSearch on input change
-          value={searchTerm} // Set the value of input to searchTerm state
+          onChange={(e) => handleSearch(e.target.value)}
+          value={searchTerm}
           style={{ width: 300 }}
         />
-        {/* Select for Role */}
+
         <Select
           placeholder="Select Role"
           onChange={handleRoleChange}
           style={{ width: 150 }}
-          value={selectedRole} // Set the value of select to selectedRole state
+          value={selectedRole}
           allowClear
         >
           {roles.map((role) => (
@@ -268,7 +320,7 @@ const ListUser = () => {
           placeholder="Select Faculty"
           onChange={handleFacultyChange}
           style={{ width: 150 }}
-          value={selectedFaculty} // Set the value of select to selectedFaculty state
+          value={selectedFaculty}
           allowClear
         >
           {faculty.map((fac) => (
@@ -277,14 +329,14 @@ const ListUser = () => {
             </Option>
           ))}
         </Select>
-        {/* Clear Filters Button */}
+
         <Button onClick={handleClearFilters} type="default">
           Clear Filters
         </Button>
       </div>
       <Table
         columns={columns}
-        dataSource={filteredUsers} // Use filteredUsers instead of users
+        dataSource={filteredUsers}
         loading={loading}
         rowKey="id"
         style={{ flex: 1 }}
@@ -299,6 +351,61 @@ const ListUser = () => {
         cancelText="No"
       >
         <p>Are you sure you want to delete this user?</p>
+      </Modal>
+      <Modal
+        title="Change Password"
+        visible={isPasswordModalVisible}
+        onCancel={() => {
+          setIsPasswordModalVisible(false);
+          form.resetFields();
+        }}
+        footer={null}
+      >
+        <Form form={form} onFinish={handleChangePassword} layout="vertical">
+          <Form.Item
+            name="newPassword"
+            label="New Password"
+            rules={[
+              { required: true, message: "Please input new password!" },
+              { min: 6, message: "Password must be at least 6 characters!" },
+            ]}
+          >
+            <Input.Password
+              prefix={<LockOutlined />}
+              placeholder="Enter new password"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="confirmPassword"
+            label="Confirm Password"
+            dependencies={["newPassword"]}
+            rules={[
+              { required: true, message: "Please confirm your password!" },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("newPassword") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("The two passwords do not match!")
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password
+              prefix={<LockOutlined />}
+              placeholder="Confirm new password"
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit" block>
+              Change Password
+            </Button>
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   );

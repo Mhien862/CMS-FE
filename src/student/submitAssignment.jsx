@@ -10,15 +10,22 @@ import {
   Typography,
   Space,
   Divider,
+  Popconfirm,
 } from "antd";
 import {
   InboxOutlined,
   FileOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
+  DeleteOutlined,
+  CommentOutlined,
 } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
-import { submitAssignment, getSubmittedAssignments } from "../services/class";
+import {
+  submitAssignment,
+  getSubmittedAssignments,
+  deleteAssignment,
+} from "../services/class";
 import { motion } from "framer-motion";
 import "./style.scss";
 
@@ -31,6 +38,7 @@ const SubmitAssignment = () => {
   const [assignments, setAssignments] = useState([]);
   const { classId, folderId } = useParams();
   const [submitting, setSubmitting] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
   useEffect(() => {
     fetchAssignments();
@@ -40,12 +48,30 @@ const SubmitAssignment = () => {
     try {
       const data = await getSubmittedAssignments(classId);
       setAssignments(data);
+      // Check if user has already submitted
+      setHasSubmitted(data.length > 0);
     } catch {
       message.error("Failed to fetch submitted assignments");
     }
   };
 
+  const handleDelete = async (assignmentId) => {
+    try {
+      await deleteAssignment(classId, folderId, assignmentId);
+      message.success("Assignment deleted successfully");
+      fetchAssignments();
+      setHasSubmitted(false);
+    } catch {
+      message.error("Failed to delete assignment");
+    }
+  };
+
   const onFinish = async (values) => {
+    if (hasSubmitted) {
+      message.error("You have already submitted");
+      return;
+    }
+
     setSubmitting(true);
     const formData = new FormData();
     formData.append("title", values.title);
@@ -93,7 +119,7 @@ const SubmitAssignment = () => {
             label="Title"
             rules={[{ required: true, message: "Please input the title!" }]}
           >
-            <Input />
+            <Input disabled={hasSubmitted} />
           </Form.Item>
           <Form.Item
             name="description"
@@ -102,10 +128,10 @@ const SubmitAssignment = () => {
               { required: true, message: "Please input the description!" },
             ]}
           >
-            <Input.TextArea rows={4} />
+            <Input.TextArea rows={4} disabled={hasSubmitted} />
           </Form.Item>
           <Form.Item label="File">
-            <Dragger {...uploadProps}>
+            <Dragger {...uploadProps} disabled={hasSubmitted}>
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
@@ -113,15 +139,24 @@ const SubmitAssignment = () => {
                 Click or drag file to this area to upload
               </p>
               <p className="ant-upload-hint">
-                Support for a single file upload. Strictly prohibit from
-                uploading company data or other sensitive files.
+                Support for a single file upload. You can only submit once.
               </p>
             </Dragger>
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={submitting}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={submitting}
+              disabled={hasSubmitted}
+            >
               Submit Assignment
             </Button>
+            {hasSubmitted && (
+              <Text type="warning" className="ml-3">
+                You have already submitted
+              </Text>
+            )}
           </Form.Item>
         </Form>
       </motion.div>
@@ -153,31 +188,56 @@ const SubmitAssignment = () => {
                     </Space>
                   }
                   extra={
-                    assignment.file_url && (
-                      <Button
-                        type="link"
-                        href={assignment.file_url}
-                        target="_blank"
-                      >
-                        View File
-                      </Button>
-                    )
+                    <Space>
+                      {assignment.file_url && (
+                        <Button
+                          type="link"
+                          href={assignment.file_url}
+                          target="_blank"
+                        >
+                          View File
+                        </Button>
+                      )}
+                      {!assignment.grade && (
+                        <Popconfirm
+                          title="Delete Assignment"
+                          description="Are you sure you want to delete this assignment?"
+                          onConfirm={() => handleDelete(assignment.id)}
+                          okText="Yes"
+                          cancelText="No"
+                        >
+                          <Button type="text" danger icon={<DeleteOutlined />}>
+                            Delete
+                          </Button>
+                        </Popconfirm>
+                      )}
+                    </Space>
                   }
                 >
                   <p>{assignment.description}</p>
-                  <Space className="assignment-info">
-                    <ClockCircleOutlined />
-                    <Text type="secondary">
-                      Submitted:{" "}
-                      {new Date(assignment.submitted_at).toLocaleString()}
-                    </Text>
-                  </Space>
-                  {assignment.grade && (
-                    <Space className="assignment-grade">
-                      <CheckCircleOutlined />
-                      <Text strong>Grade: {assignment.grade}</Text>
+                  <Space direction="vertical" className="w-full">
+                    <Space className="assignment-info">
+                      <ClockCircleOutlined />
+                      <Text type="secondary">
+                        Submitted:{" "}
+                        {new Date(assignment.submitted_at).toLocaleString()}
+                      </Text>
                     </Space>
-                  )}
+
+                    {assignment.grade && (
+                      <Space className="assignment-grade">
+                        <CheckCircleOutlined />
+                        <Text strong>Grade: {assignment.grade}</Text>
+                      </Space>
+                    )}
+
+                    {assignment.comment && (
+                      <Space className="assignment-comment">
+                        <CommentOutlined />
+                        <Text> Comment: {assignment.comment}</Text>
+                      </Space>
+                    )}
+                  </Space>
                 </Card>
               </List.Item>
             </motion.div>
