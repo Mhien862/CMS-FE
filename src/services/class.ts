@@ -136,8 +136,8 @@ export const submitAssignment = async (classId, folderId, formData) => {
   }
 };
 
-export const getSubmittedAssignments = async (classId) => {
-  const response = await axiosInstance.get(`/class/${classId}/assignments`);
+export const getSubmittedAssignments = async (classId:string,folderId:string) => {
+  const response = await axiosInstance.get(`/class/${classId}/folders/${folderId}/assignmentStudent`);
   return response.data;
 };
 
@@ -170,4 +170,9 @@ export const deleteAssignment = async (classId: string, folderId: string, assign
     console.error('Error deleting assignment:', error);
     throw error;
   }
+};
+
+export const getStudentsInClass = async (classId: string) => {
+  const response = await axiosInstance.get(`/class/${classId}/students`);
+  return response.data;
 };

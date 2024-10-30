@@ -42,13 +42,13 @@ const SubmitAssignment = () => {
 
   useEffect(() => {
     fetchAssignments();
-  }, [classId]);
+  }, [classId, folderId]);
 
   const fetchAssignments = async () => {
     try {
-      const data = await getSubmittedAssignments(classId);
+      const data = await getSubmittedAssignments(classId, folderId);
       setAssignments(data);
-      // Check if user has already submitted
+
       setHasSubmitted(data.length > 0);
     } catch {
       message.error("Failed to fetch submitted assignments");

@@ -53,7 +53,6 @@ const StudentAllClasses = () => {
     } catch (error) {
       setJoiningClass(false);
       if (error.response?.status === 403) {
-        // Hiển thị form nhập password
         setSelectedClass(classItem);
       } else {
         notification.error({

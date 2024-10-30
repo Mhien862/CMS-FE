@@ -97,7 +97,7 @@ const ClassFolders = () => {
         </Card>
 
         <Title level={3} className="folders-title">
-          Folders
+          Assignments
         </Title>
         {Array.isArray(folders) && folders.length > 0 ? (
           <List

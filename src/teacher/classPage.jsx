@@ -10,22 +10,125 @@ import {
   Typography,
   Spin,
   List,
+  Tabs,
+  Table,
 } from "antd";
 import {
   FolderOutlined,
   PlusOutlined,
   UserOutlined,
   CalendarOutlined,
+  TeamOutlined,
 } from "@ant-design/icons";
 import {
   getClassById,
   createFolder,
   getFoldersByClassId,
+  getStudentsInClass,
 } from "../services/class";
 import "./style.scss";
 
 const { Title, Text } = Typography;
+const { TabPane } = Tabs;
 
+// StudentList Component
+const StudentList = ({ classId }) => {
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const response = await getStudentsInClass(classId);
+        setStudents(response.data || []);
+      } catch (error) {
+        notification.error({
+          message: "Failed to fetch students",
+          description: error.message || "Failed to load student list",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudents();
+  }, [classId]);
+
+  const columns = [
+    {
+      title: "Student Name",
+      dataIndex: "username",
+      key: "username",
+    },
+
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Joined Date",
+      dataIndex: "joined_at",
+      key: "joined_at",
+      render: (date) => new Date(date).toLocaleDateString(),
+    },
+  ];
+
+  return (
+    <Card className="student-list-card">
+      <Table
+        loading={loading}
+        columns={columns}
+        dataSource={students}
+        rowKey="id"
+        pagination={false}
+      />
+    </Card>
+  );
+};
+
+// Folder List Component
+const FolderList = ({ folders, onFolderClick }) => {
+  return (
+    <List
+      grid={{ gutter: 16, column: 3 }}
+      dataSource={folders}
+      renderItem={(folder) => (
+        <List.Item>
+          <Card
+            hoverable
+            className="folder-card"
+            onClick={() => onFolderClick(folder.id)}
+          >
+            <Space direction="vertical">
+              <Space>
+                <FolderOutlined className="folder-icon" />
+                <Text strong className="folder-name">
+                  {folder.name || "Unnamed Folder"}
+                </Text>
+              </Space>
+              <Space className="folder-info">
+                <UserOutlined />
+                <Text>Created by: {folder.created_by || "Unknown"}</Text>
+              </Space>
+              <Space className="folder-info">
+                <CalendarOutlined />
+                <Text>
+                  Created at:{" "}
+                  {folder.created_at
+                    ? new Date(folder.created_at).toLocaleString()
+                    : "Unknown"}
+                </Text>
+              </Space>
+            </Space>
+          </Card>
+        </List.Item>
+      )}
+    />
+  );
+};
+
+// Main ClassPage Component
 const ClassPage = () => {
   const { classId } = useParams();
   const navigate = useNavigate();
@@ -34,6 +137,7 @@ const ClassPage = () => {
   const [classInfo, setClassInfo] = useState(null);
   const [folders, setFolders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("1");
 
   const fetchClassInfo = useCallback(async () => {
     try {
@@ -126,11 +230,49 @@ const ClassPage = () => {
           </Space>
         </Card>
 
-        <div className="folder-actions">
-          <Button type="primary" onClick={showModal} icon={<PlusOutlined />}>
-            Create Folder
-          </Button>
-        </div>
+        <Tabs
+          activeKey={activeTab}
+          onChange={setActiveTab}
+          className="class-tabs"
+        >
+          <TabPane
+            tab={
+              <span>
+                <FolderOutlined />
+                Folders
+              </span>
+            }
+            key="1"
+          >
+            <div className="folder-actions">
+              <Button
+                type="primary"
+                onClick={showModal}
+                icon={<PlusOutlined />}
+              >
+                Create Folder
+              </Button>
+            </div>
+
+            {Array.isArray(folders) && folders.length > 0 ? (
+              <FolderList folders={folders} onFolderClick={handleFolderClick} />
+            ) : (
+              <Text>No folders found.</Text>
+            )}
+          </TabPane>
+
+          <TabPane
+            tab={
+              <span>
+                <TeamOutlined />
+                Students
+              </span>
+            }
+            key="2"
+          >
+            <StudentList classId={classId} />
+          </TabPane>
+        </Tabs>
 
         <Modal
           title="Create New Folder"
@@ -144,47 +286,6 @@ const ClassPage = () => {
             onChange={(e) => setFolderName(e.target.value)}
           />
         </Modal>
-
-        <Title level={3}>Folders</Title>
-        {Array.isArray(folders) && folders.length > 0 ? (
-          <List
-            grid={{ gutter: 16, column: 3 }}
-            dataSource={folders}
-            renderItem={(folder) => (
-              <List.Item>
-                <Card
-                  hoverable
-                  className="folder-card"
-                  onClick={() => handleFolderClick(folder.id)}
-                >
-                  <Space direction="vertical">
-                    <Space>
-                      <FolderOutlined className="folder-icon" />
-                      <Text strong className="folder-name">
-                        {folder.name || "Unnamed Folder"}
-                      </Text>
-                    </Space>
-                    <Space className="folder-info">
-                      <UserOutlined />
-                      <Text>Created by: {folder.created_by || "Unknown"}</Text>
-                    </Space>
-                    <Space className="folder-info">
-                      <CalendarOutlined />
-                      <Text>
-                        Created at:{" "}
-                        {folder.created_at
-                          ? new Date(folder.created_at).toLocaleString()
-                          : "Unknown"}
-                      </Text>
-                    </Space>
-                  </Space>
-                </Card>
-              </List.Item>
-            )}
-          />
-        ) : (
-          <Text>No folders found.</Text>
-        )}
       </Space>
     </div>
   );
