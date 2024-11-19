@@ -1,25 +1,40 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { Card, Table, Space, Typography, Spin, notification } from "antd";
-import { getStudentsInClass } from "../services/class";
+import {
+  Card,
+  Typography,
+  Spin,
+  notification,
+  Empty,
+  Input,
+  Space,
+  Tag,
+} from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import {
+  getStudentsInClass,
+  getStudentsGradesInClass,
+} from "../services/class";
 
 const { Title } = Typography;
 
+// StudentList Component
+// StudentList Component trong ClassPage
 const StudentList = ({ classId }) => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         setLoading(true);
-        const response = await getStudentsInClass(classId);
-        setStudents(response.data);
+        const response = await getStudentsGradesInClass(classId);
+        setStudents(response.data || []);
       } catch (error) {
         notification.error({
           message: "Failed to fetch students",
-          description:
-            error.message || "An error occurred while fetching students",
+          description: error.message || "Failed to load student list",
         });
       } finally {
         setLoading(false);
@@ -31,6 +46,12 @@ const StudentList = ({ classId }) => {
     }
   }, [classId]);
 
+  const filteredStudents = students.filter(
+    (student) =>
+      student.username.toLowerCase().includes(searchText.toLowerCase()) ||
+      student.email.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   const columns = [
     {
       title: "Student Name",
@@ -38,12 +59,47 @@ const StudentList = ({ classId }) => {
       key: "username",
       className: "text-left p-4",
     },
-
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
       className: "text-left p-4",
+    },
+    {
+      title: "Assignments",
+      key: "assignments",
+      className: "text-left p-4",
+      render: (_, record) => {
+        if (!record.assignments?.length) {
+          return <Tag>No assignments</Tag>;
+        }
+        return (
+          <Space>
+            <Tag color="processing">{record.assignments.length} submitted</Tag>
+            {record.assignments.some((a) => a.grade) && (
+              <Tag color="success">
+                {record.assignments.filter((a) => a.grade).length} graded
+              </Tag>
+            )}
+          </Space>
+        );
+      },
+    },
+    {
+      title: "Average Grade",
+      dataIndex: "average_grade",
+      key: "average_grade",
+      className: "text-left p-4",
+      render: (grade) => {
+        if (!grade) return <Tag>No grade</Tag>;
+        return (
+          <Tag
+            color={grade >= 7 ? "success" : grade >= 5 ? "warning" : "error"}
+          >
+            {grade}
+          </Tag>
+        );
+      },
     },
     {
       title: "Joined Date",
@@ -54,61 +110,74 @@ const StudentList = ({ classId }) => {
     },
   ];
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-48">
-        <Spin size="large" />
-      </div>
-    );
-  }
-
   return (
-    <Card className="w-full mt-4">
-      <div className="p-4">
-        <Title className="text-xl font-bold mb-4">Class Students</Title>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-100">
-                {columns.map((column) => (
-                  <th key={column.key} className={column.className}>
-                    {column.title}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {students.map((student, index) => (
-                <tr
-                  key={student.id}
-                  className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                >
+    <div className="p-4">
+      <div className="flex justify-between items-center mb-4">
+        <Title level={4}>Class Students</Title>
+        <Input
+          placeholder="Search students..."
+          prefix={<SearchOutlined />}
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          style={{ width: 250 }}
+          allowClear
+        />
+      </div>
+
+      {loading ? (
+        <div className="flex justify-center items-center h-48">
+          <Spin size="large" />
+        </div>
+      ) : (
+        <Card className="w-full">
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-gray-100">
                   {columns.map((column) => (
-                    <td
-                      key={`${student.id}-${column.key}`}
-                      className={column.className}
-                    >
-                      {column.render
-                        ? column.render(student[column.dataIndex])
-                        : student[column.dataIndex]}
-                    </td>
+                    <th key={column.key} className={column.className}>
+                      {column.title}
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          {students.length === 0 && (
-            <div className="text-center p-4 text-gray-500">
-              No students enrolled in this class yet.
+              </thead>
+              <tbody>
+                {filteredStudents.map((student, index) => (
+                  <tr
+                    key={student.id}
+                    className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                  >
+                    {columns.map((column) => (
+                      <td
+                        key={`${student.id}-${column.key}`}
+                        className={column.className}
+                      >
+                        {column.render
+                          ? column.render(student[column.dataIndex], student)
+                          : student[column.dataIndex]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {filteredStudents.length === 0 && (
+              <div className="text-center p-8 text-gray-500">
+                {searchText
+                  ? "No students found matching your search"
+                  : "No students enrolled in this class yet"}
+              </div>
+            )}
+          </div>
+          {filteredStudents.length > 0 && (
+            <div className="p-4 border-t text-right text-gray-600">
+              Total students: {filteredStudents.length}
             </div>
           )}
-        </div>
-      </div>
-    </Card>
+        </Card>
+      )}
+    </div>
   );
-};
-StudentList.propTypes = {
-  classId: PropTypes.string.isRequired,
 };
 
 export default StudentList;

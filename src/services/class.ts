@@ -24,7 +24,14 @@ interface GradeData {
 interface EnrollmentStatus {
   isEnrolled: boolean;
   enrollmentDetails?: any;
+}interface StudentClass {
+  class_name: string;
+  teacher_name: string;
+  average_grade: number;
+  joined_at: string;
 }
+
+
 
 export const getAllClass = async () => {
   const response = await axiosInstance.get("class/listClasses");
@@ -175,4 +182,28 @@ export const deleteAssignment = async (classId: string, folderId: string, assign
 export const getStudentsInClass = async (classId: string) => {
   const response = await axiosInstance.get(`/class/${classId}/students`);
   return response.data;
+};
+
+
+// services/class.ts
+export const getStudentsGradesInClass = async (classId: string) => {
+  try {
+    console.log('Fetching grades for class:', classId);
+    const response = await axiosInstance.get(`/class/${classId}/students/grades`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching student grades:', error);
+    throw error;
+  }
+};
+
+export const getStudentClasses = async (studentId: string) => {
+  try {
+    console.log('Fetching classes for student:', studentId);
+    const response = await axiosInstance.get(`/class/students/${studentId}/classes`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching student classes:', error);
+    throw error;
+  }
 };
