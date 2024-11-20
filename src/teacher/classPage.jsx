@@ -1,24 +1,40 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Button,
+  Input,
+  Modal,
   notification,
   Card,
   Space,
+  Typography,
+  Spin,
+  List,
+  Tabs,
   Table,
   Tag,
-  Modal,
-  List,
-  Typography,
 } from "antd";
-import { FolderOutlined } from "@ant-design/icons";
-import { useParams } from "react-router-dom"; // Lấy classId trực tiếp từ URL
-import { getStudentsGradesInClass, getStudentClasses } from "../services/class";
+import {
+  FolderOutlined,
+  PlusOutlined,
+  UserOutlined,
+  CalendarOutlined,
+  TeamOutlined,
+} from "@ant-design/icons";
+import {
+  getClassById,
+  createFolder,
+  getFoldersByClassId,
+  getStudentsGradesInClass,
+  getStudentClasses,
+} from "../services/class";
 import "./style.scss";
 
-const { Text } = Typography;
+const { Title, Text } = Typography;
+const { TabPane } = Tabs;
 
-const StudentList = () => {
-  const { classId } = useParams(); // Lấy classId từ URL
+// StudentList Component
+const StudentList = ({ classId }) => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -26,36 +42,19 @@ const StudentList = () => {
   const [selectedStudentName, setSelectedStudentName] = useState("");
   const [loadingClasses, setLoadingClasses] = useState(false);
 
-  // Fetch students when classId changes
+  // Fetch students
   useEffect(() => {
-    if (!classId) {
-      console.warn("Missing classId. Cannot fetch students.");
-      setLoading(false); // Ngừng loading nếu không có classId
-      return;
-    }
-
     const fetchStudents = async () => {
-      setLoading(true);
       try {
-        console.log("Fetching students for classId:", classId);
         const response = await getStudentsGradesInClass(classId);
-        console.log("Response from getStudentsGradesInClass:", response);
-
-        if (response?.data) {
-          setStudents(response.data);
-          console.log("Students data set:", response.data);
-        } else {
-          console.warn("No data found in response:", response);
-        }
+        setStudents(response.data || []);
       } catch (error) {
-        console.error("Error fetching students:", error);
         notification.error({
           message: "Failed to fetch students",
           description: error.message || "Failed to load student list",
         });
       } finally {
         setLoading(false);
-        console.log("Loading state set to false.");
       }
     };
 
@@ -64,54 +63,23 @@ const StudentList = () => {
 
   // Fetch classes for a specific student
   const handleViewClasses = async (studentId, username) => {
-    if (!studentId) {
-      console.warn("Missing studentId. Cannot fetch classes.");
-      return;
-    }
-
-    console.log(
-      "Fetching classes for studentId:",
-      studentId,
-      "Username:",
-      username
-    );
     setModalVisible(true);
     setSelectedStudentName(username);
     setLoadingClasses(true);
 
     try {
       const response = await getStudentClasses(studentId);
-      console.log("Response from getStudentClasses:", response);
-
-      if (response?.data) {
-        setSelectedStudentClasses(response.data);
-        console.log("Classes data set for student:", response.data);
-      } else {
-        console.warn("No data found in response:", response);
-      }
+      setSelectedStudentClasses(response.data || []);
     } catch (error) {
-      console.error("Error fetching student classes:", error);
       notification.error({
         message: "Failed to fetch student classes",
-        description: error.message || "Could not load class details",
+        description: error.message || "Failed to load class details",
       });
     } finally {
       setLoadingClasses(false);
-      console.log("LoadingClasses state set to false.");
     }
   };
 
-  // Determine grade color based on value
-  const getGradeColor = (grade) => {
-    console.log("Getting grade color for grade:", grade);
-    if (!grade) return "default";
-    if (grade >= 8.5) return "success";
-    if (grade >= 7) return "processing";
-    if (grade >= 5) return "warning";
-    return "error";
-  };
-
-  // Define table columns
   const columns = [
     {
       title: "Student Name",
@@ -141,9 +109,15 @@ const StudentList = () => {
       title: "Average Grade",
       dataIndex: "average_grade",
       key: "average_grade",
-      render: (grade) => (
-        <Tag color={getGradeColor(grade)}>{grade || "No grade"}</Tag>
-      ),
+      render: (grade) => {
+        if (!grade) return <Tag>No grade</Tag>;
+        let color = "default";
+        if (grade >= 8.5) color = "success";
+        else if (grade >= 7) color = "processing";
+        else if (grade >= 5) color = "warning";
+        else color = "error";
+        return <Tag color={color}>{grade}</Tag>;
+      },
     },
     {
       title: "Joined Date",
@@ -157,9 +131,8 @@ const StudentList = () => {
       render: (_, record) => (
         <Button
           type="primary"
-          icon={<FolderOutlined />}
-          onClick={() => handleViewClasses(record.id, record.username)}
           size="small"
+          onClick={() => handleViewClasses(record.id, record.username)}
         >
           View Classes
         </Button>
@@ -179,9 +152,7 @@ const StudentList = () => {
             </Text>
             <Text>
               <strong>Average Grade:</strong>{" "}
-              <Tag color={getGradeColor(item.average_grade)}>
-                {item.average_grade || "No grade"}
-              </Tag>
+              <Tag color="blue">{item.average_grade || "No grade"}</Tag>
             </Text>
             <Text>
               <strong>Joined:</strong>{" "}
@@ -196,36 +167,28 @@ const StudentList = () => {
   return (
     <>
       <Card className="student-list-card">
-        {classId ? (
-          <Table
-            loading={loading}
-            columns={columns}
-            dataSource={students}
-            rowKey="id"
-            pagination={false}
-            scroll={{ x: "max-content" }}
-          />
-        ) : (
-          <Text type="warning">Class ID is missing. Please check the URL.</Text>
-        )}
+        <Table
+          loading={loading}
+          columns={columns}
+          dataSource={students}
+          rowKey="id"
+          pagination={false}
+          scroll={{ x: "max-content" }}
+        />
       </Card>
 
       <Modal
         title={`Classes for ${selectedStudentName}`}
-        open={modalVisible}
+        visible={modalVisible}
         onCancel={() => {
-          console.log("Closing modal.");
           setModalVisible(false);
           setSelectedStudentClasses([]);
-          setSelectedStudentName("");
         }}
         footer={null}
-        width={600}
       >
         <List
-          className="student-classes-list"
-          loading={loadingClasses}
           dataSource={selectedStudentClasses}
+          loading={loadingClasses}
           renderItem={renderClassItem}
           locale={{ emptyText: "No classes found" }}
         />
@@ -234,4 +197,180 @@ const StudentList = () => {
   );
 };
 
-export default StudentList;
+// FolderList Component
+const FolderList = ({ folders, onFolderClick }) => {
+  return (
+    <List
+      grid={{ gutter: 16, column: 3 }}
+      dataSource={folders}
+      renderItem={(folder) => (
+        <List.Item>
+          <Card
+            hoverable
+            className="folder-card"
+            onClick={() => onFolderClick(folder.id)} // Gọi hàm điều hướng khi nhấn
+          >
+            <Space direction="vertical">
+              <Space>
+                <FolderOutlined className="folder-icon" />
+                <Text strong className="folder-name">
+                  {folder.name || "Unnamed Folder"}
+                </Text>
+              </Space>
+              <Space className="folder-info">
+                <UserOutlined />
+                <Text>Created by: {folder.created_by || "Unknown"}</Text>
+              </Space>
+              <Space className="folder-info">
+                <CalendarOutlined />
+                <Text>
+                  Created at:{" "}
+                  {folder.created_at
+                    ? new Date(folder.created_at).toLocaleString()
+                    : "Unknown"}
+                </Text>
+              </Space>
+            </Space>
+          </Card>
+        </List.Item>
+      )}
+    />
+  );
+};
+
+// Main ClassPage Component
+const ClassPage = () => {
+  const { classId } = useParams();
+  const navigate = useNavigate();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [folderName, setFolderName] = useState("");
+  const [classInfo, setClassInfo] = useState(null);
+  const [folders, setFolders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("1");
+
+  const fetchClassInfo = useCallback(async () => {
+    try {
+      const response = await getClassById(classId);
+      setClassInfo(response.data);
+    } catch (error) {
+      notification.error({
+        message: "Failed to fetch class information",
+        description: "An error occurred while fetching class details.",
+      });
+      if (error.response?.status === 403) {
+        navigate("/");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [classId, navigate]);
+
+  const fetchFolders = useCallback(async () => {
+    try {
+      const folders = await getFoldersByClassId(classId);
+      setFolders(folders || []);
+    } catch (error) {
+      console.error("Error fetching folders:", error);
+      notification.error({
+        message: "Failed to fetch folders",
+        description: error.message || "An unknown error occurred",
+      });
+      setFolders([]);
+    }
+  }, [classId]);
+
+  const handleFolderClick = (folderId) => {
+    navigate(`/teacher/class/${classId}/folder/${folderId}`); // Điều hướng đến trang chi tiết folder
+  };
+
+  const handleOk = async () => {
+    try {
+      await createFolder(classId, { name: folderName });
+      notification.success({ message: "Folder created successfully" });
+      setIsModalVisible(false);
+      setFolderName("");
+      fetchFolders();
+    } catch (error) {
+      notification.error({
+        message: "Failed to create folder",
+        description: error.response?.data?.message || "Failed to create folder",
+      });
+    }
+  };
+
+  const handleCancel = () => setIsModalVisible(false);
+
+  useEffect(() => {
+    if (classId) {
+      fetchClassInfo();
+      fetchFolders();
+    }
+  }, [classId, fetchClassInfo, fetchFolders]);
+
+  if (loading) return <Spin size="large" className="page-loader" />;
+  if (!classInfo) return <Text>No class information available.</Text>;
+
+  return (
+    <div className="class-page">
+      <Space direction="vertical" size="large" style={{ width: "100%" }}>
+        <Card className="class-info-card">
+          <Title level={2}>{classInfo.name}</Title>
+          <Space direction="vertical">
+            <Text>
+              <strong>Faculty:</strong> {classInfo.faculty_name}
+            </Text>
+            <Text>
+              <strong>Teacher:</strong> {classInfo.teacher_name}
+            </Text>
+          </Space>
+        </Card>
+
+        <Tabs
+          activeKey={activeTab}
+          onChange={setActiveTab}
+          className="class-tabs"
+        >
+          <TabPane
+            tab={
+              <span>
+                <FolderOutlined />
+                Folders
+              </span>
+            }
+            key="1"
+          >
+            <FolderList folders={folders} onFolderClick={handleFolderClick} />
+          </TabPane>
+
+          <TabPane
+            tab={
+              <span>
+                <TeamOutlined />
+                Students
+              </span>
+            }
+            key="2"
+          >
+            <StudentList classId={classId} />
+          </TabPane>
+        </Tabs>
+
+        <Modal
+          title="Create New Folder"
+          visible={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <Input
+            placeholder="Enter folder name"
+            value={folderName}
+            onChange={(e) => setFolderName(e.target.value)}
+          />
+        </Modal>
+      </Space>
+    </div>
+  );
+};
+
+export default ClassPage;

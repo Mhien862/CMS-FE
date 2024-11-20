@@ -83,18 +83,19 @@ export const createFolder = async (classId: string | number, data: FolderData) =
 
 export const getFoldersByClassId = async (classId: string) => {
   try {
-    const response = await axiosInstance.get(`/class/${classId}/folders`);  
-    if (response.data && response.data.folders) {
-      return response.data.folders;
-    } else if (Array.isArray(response.data)) {
-      return response.data;
+    const response = await axiosInstance.get(`/class/${classId}/folders`);
+    // Kiểm tra đúng cấu trúc trả về từ API
+    if (response?.data?.folders) {
+      return response.data.folders; // Trả về danh sách folder
     } else {
       throw new Error("Unexpected data structure from API");
     }
   } catch (error) {
+    console.error("Error fetching folders:", error);
     throw error;
   }
 };
+
 
 
 export const getClassesByFaculty = async (facultyId: string) => {
