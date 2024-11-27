@@ -1,72 +1,89 @@
+import React from "react";
 import { Form, Input, Button, Select, notification } from "antd";
-import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
+import {
+  UserAddOutlined,
+  CheckCircleOutlined,
+  WarningOutlined,
+} from "@ant-design/icons";
 import { register } from "../../services/login";
 import { useNavigate } from "react-router-dom";
 import { useRole } from "../../hook/useRole";
 import { useFaculty } from "../../hook/useFaculty";
+import "./style.scss";
 
-const { Option } = Select;
-
-const FormUser = () => {
-  const { loading, roles } = useRole();
-  const { faculty } = useFaculty();
-
+const CreateUser = () => {
+  const { loading: loadingRoles, roles } = useRole();
+  const { loading: loadingFaculty, faculty } = useFaculty();
   const [form] = Form.useForm();
   const navigate = useNavigate();
+
   const handleSubmit = async (values) => {
     try {
       const res = await register(values);
       notification.success({
-        message: "Create Success",
+        message: "Success",
         description: res.message,
-        icon: <CheckCircleOutlined style={{ color: "#00ff66" }} />,
+        placement: "topRight",
+        icon: <CheckCircleOutlined style={{ color: "#52c41a" }} />,
       });
       navigate("/list-user");
       form.resetFields();
     } catch (error) {
       notification.error({
-        message: "Create Failed",
-        description: error.response?.data?.message || "An error occurred",
-        icon: <WarningOutlined style={{ color: "#e91010" }} />,
+        message: "Error",
+        description: error.response?.data?.message || "Failed to create user",
+        placement: "topRight",
+        icon: <WarningOutlined style={{ color: "#ff4d4f" }} />,
       });
     }
   };
 
   return (
-    <div className="form-user">
-      <div className="form-container">
-        <h2>Create New User</h2>
+    <div className="create-user-container">
+      <div className="form-card">
+        <div className="form-title">
+          <h2>Create New User</h2>
+          <p>Add a new user to the system with role and faculty assignment</p>
+        </div>
+
         <Form
           form={form}
           name="createUser"
           onFinish={handleSubmit}
           layout="vertical"
+          requiredMark={false}
         >
           <Form.Item
             name="username"
             label="Username"
-            rules={[{ required: true, message: "Please input your username!" }]}
+            rules={[
+              { required: true, message: "Please input username!" },
+              { min: 3, message: "Username must be at least 3 characters!" },
+            ]}
           >
-            <Input size="large" placeholder="Enter username" />
+            <Input placeholder="Enter username" />
           </Form.Item>
 
           <Form.Item
             name="email"
             label="Email"
             rules={[
-              { required: true, message: "Please input your email!" },
+              { required: true, message: "Please input email!" },
               { type: "email", message: "Please enter a valid email!" },
             ]}
           >
-            <Input size="large" placeholder="Enter email" />
+            <Input placeholder="Enter email address" />
           </Form.Item>
 
           <Form.Item
             name="password"
             label="Password"
-            rules={[{ required: true, message: "Please input your password!" }]}
+            rules={[
+              { required: true, message: "Please input password!" },
+              { min: 6, message: "Password must be at least 6 characters!" },
+            ]}
           >
-            <Input.Password size="large" placeholder="Enter password" />
+            <Input.Password placeholder="Enter password" />
           </Form.Item>
 
           <Form.Item
@@ -74,11 +91,16 @@ const FormUser = () => {
             label="Role"
             rules={[{ required: true, message: "Please select a role!" }]}
           >
-            <Select size="large" placeholder="Select a role" loading={loading}>
+            <Select
+              placeholder="Select user role"
+              loading={loadingRoles}
+              showSearch
+              optionFilterProp="children"
+            >
               {roles?.map((role) => (
-                <Option key={role.id} value={role.id}>
+                <Select.Option key={role.id} value={role.id}>
                   {role.name}
-                </Option>
+                </Select.Option>
               ))}
             </Select>
           </Form.Item>
@@ -89,27 +111,31 @@ const FormUser = () => {
             rules={[{ required: true, message: "Please select a faculty!" }]}
           >
             <Select
-              size="large"
-              placeholder="Select a faculty"
-              loading={loading}
+              placeholder="Select faculty"
+              loading={loadingFaculty}
+              showSearch
+              optionFilterProp="children"
             >
               {faculty?.map((fac) => (
-                <Option key={fac.id} value={fac.id}>
+                <Select.Option key={fac.id} value={fac.id}>
                   {fac.name}
-                </Option>
+                </Select.Option>
               ))}
             </Select>
           </Form.Item>
 
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block>
-              Create User
-            </Button>
-          </Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="submit-button"
+            icon={<UserAddOutlined />}
+          >
+            Create User
+          </Button>
         </Form>
       </div>
     </div>
   );
 };
 
-export default FormUser;
+export default CreateUser;

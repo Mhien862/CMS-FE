@@ -1,3 +1,307 @@
+// style.scss
 .list-faculty {
-  height: 100vh;
+  padding: 24px;
+
+  .header-section {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin: 0;
+      background: linear-gradient(135deg, #0088ff 0%, #00bfff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .add-button {
+      height: 44px;
+      padding: 0 24px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 500;
+      background: linear-gradient(135deg, #0088ff 0%, #00bfff 100%);
+      border: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .anticon {
+        font-size: 18px;
+      }
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 16px rgba(0, 136, 255, 0.2);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+
+  .ant-table-wrapper {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+
+    .ant-table {
+      background: transparent;
+
+      .ant-table-thead > tr > th {
+        background: #f6f8fa;
+        color: #333;
+        font-weight: 600;
+        padding: 16px;
+        border-bottom: 2px solid #f0f0f0;
+
+        &:first-child {
+          border-top-left-radius: 12px;
+          border-bottom-left-radius: 12px;
+        }
+
+        &:last-child {
+          border-top-right-radius: 12px;
+          border-bottom-right-radius: 12px;
+        }
+      }
+
+      .ant-table-tbody > tr > td {
+        padding: 16px;
+        border-bottom: 1px solid #f0f0f0;
+
+        .ant-btn {
+          height: 36px;
+          border-radius: 8px;
+          padding: 0 16px;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          transition: all 0.2s ease;
+
+          .anticon {
+            font-size: 16px;
+          }
+
+          &:hover {
+            color: #0088ff;
+            border-color: #0088ff;
+          }
+        }
+      }
+
+      .ant-table-tbody > tr:hover > td {
+        background: #f6f8fa;
+      }
+    }
+  }
+
+  // Modal styles
+  .ant-modal {
+    .ant-modal-content {
+      border-radius: 16px;
+      padding: 0;
+
+      .ant-modal-header {
+        padding: 24px;
+        border-bottom: 1px solid #f0f0f0;
+        border-radius: 16px 16px 0 0;
+
+        .ant-modal-title {
+          font-size: 20px;
+          font-weight: 600;
+          color: #333;
+        }
+      }
+
+      .ant-modal-body {
+        padding: 24px;
+
+        .ant-form {
+          .ant-form-item-label {
+            label {
+              color: #333;
+              font-weight: 500;
+              font-size: 15px;
+            }
+          }
+
+          .ant-input {
+            height: 44px;
+            border-radius: 12px;
+            border: 2px solid #e8e8e8;
+            padding: 0 16px;
+            font-size: 15px;
+            transition: all 0.2s ease;
+
+            &:hover {
+              border-color: #0088ff;
+            }
+
+            &:focus {
+              border-color: #0088ff;
+              box-shadow: 0 0 0 3px rgba(0, 136, 255, 0.1);
+            }
+          }
+
+          .ant-btn {
+            height: 44px;
+            border-radius: 12px;
+            padding: 0 24px;
+            font-size: 15px;
+            font-weight: 500;
+            background: linear-gradient(135deg, #0088ff 0%, #00bfff 100%);
+            border: none;
+            transition: all 0.3s ease;
+
+            &:hover {
+              transform: translateY(-1px);
+              box-shadow: 0 8px 16px rgba(0, 136, 255, 0.2);
+            }
+
+            &:active {
+              transform: translateY(0);
+            }
+          }
+        }
+      }
+
+      .ant-modal-close {
+        top: 24px;
+        right: 24px;
+
+        .ant-modal-close-x {
+          width: 44px;
+          height: 44px;
+          line-height: 44px;
+
+          .anticon {
+            font-size: 18px;
+            color: #666;
+          }
+        }
+      }
+    }
+  }
+
+  // Notification styles
+  .ant-notification-notice {
+    border-radius: 12px;
+    padding: 16px;
+
+    .ant-notification-notice-icon {
+      font-size: 24px;
+      margin-top: 4px;
+    }
+
+    .ant-notification-notice-message {
+      color: #333;
+      font-weight: 500;
+    }
+
+    .ant-notification-notice-description {
+      color: #666;
+    }
+  }
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+  .list-faculty {
+    padding: 16px;
+
+    .header-section {
+      margin-bottom: 16px;
+      flex-direction: column;
+      gap: 16px;
+      align-items: stretch;
+
+      h2 {
+        font-size: 24px;
+        text-align: center;
+      }
+
+      .add-button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .ant-table-wrapper {
+      padding: 16px;
+
+      .ant-table {
+        .ant-table-thead > tr > th,
+        .ant-table-tbody > tr > td {
+          padding: 12px;
+        }
+      }
+    }
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .list-faculty {
+    background: #1f1f1f;
+
+    .ant-table-wrapper {
+      background: #2f2f2f;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+
+      .ant-table {
+        .ant-table-thead > tr > th {
+          background: #1a1a1a;
+          color: #fff;
+          border-bottom-color: #333;
+        }
+
+        .ant-table-tbody > tr > td {
+          border-bottom-color: #333;
+          color: #fff;
+        }
+
+        .ant-table-tbody > tr:hover > td {
+          background: #1a1a1a;
+        }
+      }
+    }
+
+    .ant-modal {
+      .ant-modal-content {
+        background: #2f2f2f;
+
+        .ant-modal-header {
+          background: #2f2f2f;
+          border-bottom-color: #333;
+
+          .ant-modal-title {
+            color: #fff;
+          }
+        }
+
+        .ant-form {
+          .ant-form-item-label label {
+            color: #fff;
+          }
+
+          .ant-input {
+            background: #1a1a1a;
+            border-color: #333;
+            color: #fff;
+
+            &:hover {
+              border-color: #0088ff;
+            }
+          }
+        }
+      }
+    }
+  }
 }

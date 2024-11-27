@@ -340,7 +340,17 @@ const ClassPage = () => {
             }
             key="1"
           >
-            <FolderList folders={folders} onFolderClick={handleFolderClick} />
+            <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={() => setIsModalVisible(true)}
+                style={{ marginBottom: "16px" }}
+              >
+                Create Folder
+              </Button>
+              <FolderList folders={folders} onFolderClick={handleFolderClick} />
+            </Space>
           </TabPane>
 
           <TabPane

@@ -10,14 +10,13 @@ import {
   Input,
   Select,
   Avatar,
+  Modal,
 } from "antd";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import { getAllClass, getListTeacher } from "../../services/class";
+import { getAllClass, getListTeacher, deleteClass } from "../../services/class";
 import { useFaculty } from "../../hook/useFaculty";
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
-import { deleteClass } from "../../services/class";
-import { Modal } from "antd";
 
 const { confirm } = Modal;
 const { Title, Text } = Typography;
@@ -34,10 +33,13 @@ const ClassList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFaculty, setSelectedFaculty] = useState(null);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
-  const navigate = useNavigate();
+  const [selectedAcademicYear, setSelectedAcademicYear] = useState(null);
+  const [selectedSemester, setSelectedSemester] = useState(null);
 
+  const navigate = useNavigate();
   const { faculty } = useFaculty();
 
+  // Fetch classes
   const getClasses = async () => {
     try {
       const response = await getAllClass();
@@ -51,6 +53,7 @@ const ClassList = () => {
     }
   };
 
+  // Fetch teachers
   const getTeachers = async () => {
     try {
       const response = await getListTeacher();
@@ -68,8 +71,16 @@ const ClassList = () => {
 
   useEffect(() => {
     filterClasses();
-  }, [searchTerm, selectedFaculty, selectedTeacher, classes]);
+  }, [
+    searchTerm,
+    selectedFaculty,
+    selectedTeacher,
+    selectedAcademicYear,
+    selectedSemester,
+    classes,
+  ]);
 
+  // Filter teachers by selected faculty
   useEffect(() => {
     if (selectedFaculty) {
       const filtered = teachers.filter(
@@ -81,6 +92,7 @@ const ClassList = () => {
     }
   }, [selectedFaculty, teachers]);
 
+  // Filter classes
   const filterClasses = () => {
     let filtered = classes;
 
@@ -102,17 +114,19 @@ const ClassList = () => {
       );
     }
 
+    if (selectedAcademicYear) {
+      filtered = filtered.filter(
+        (classItem) => classItem.academic_year_name === selectedAcademicYear
+      );
+    }
+
+    if (selectedSemester) {
+      filtered = filtered.filter(
+        (classItem) => classItem.semester_name === selectedSemester
+      );
+    }
+
     setFilteredClasses(filtered);
-  };
-
-  const getTeacherName = (teacherId) => {
-    const teacher = teachers.find((t) => t.id === teacherId);
-    return teacher ? teacher.username : "Unknown";
-  };
-
-  const getFacultyName = (facultyId) => {
-    const facultyItem = faculty.find((f) => f.id === facultyId);
-    return facultyItem ? facultyItem.name : "Unknown Faculty";
   };
 
   const handleCreateClass = () => {
@@ -133,9 +147,6 @@ const ClassList = () => {
       onOk() {
         handleDeleteClass(classId);
       },
-      onCancel() {
-        console.log("Cancel");
-      },
     });
   };
 
@@ -149,23 +160,12 @@ const ClassList = () => {
     }
   };
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleFacultyChange = (value) => {
-    setSelectedFaculty(value);
-    setSelectedTeacher(null);
-  };
-
-  const handleTeacherChange = (value) => {
-    setSelectedTeacher(value);
-  };
-
   const clearFilters = () => {
     setSearchTerm("");
     setSelectedFaculty(null);
     setSelectedTeacher(null);
+    setSelectedAcademicYear(null);
+    setSelectedSemester(null);
   };
 
   if (loading) return <Spin size="large" />;
@@ -188,14 +188,14 @@ const ClassList = () => {
       <div className="class-list__filters">
         <Search
           placeholder="Search classes"
-          onChange={handleSearch}
+          onChange={(e) => setSearchTerm(e.target.value)}
           value={searchTerm}
           prefix={<SearchOutlined />}
           className="search-input"
         />
         <Select
           placeholder="Select Faculty"
-          onChange={handleFacultyChange}
+          onChange={(value) => setSelectedFaculty(value)}
           value={selectedFaculty}
           className="faculty-select"
         >
@@ -208,7 +208,7 @@ const ClassList = () => {
         {selectedFaculty && (
           <Select
             placeholder="Select Teacher"
-            onChange={handleTeacherChange}
+            onChange={(value) => setSelectedTeacher(value)}
             value={selectedTeacher}
             className="teacher-select"
           >
@@ -219,61 +219,85 @@ const ClassList = () => {
             ))}
           </Select>
         )}
+        <Select
+          placeholder="Select Academic Year"
+          onChange={(value) => setSelectedAcademicYear(value)}
+          value={selectedAcademicYear}
+          className="academic-year-select"
+        >
+          {[
+            ...new Set(
+              classes.map((classItem) => classItem.academic_year_name)
+            ),
+          ].map((year) => (
+            <Option key={year} value={year}>
+              {year}
+            </Option>
+          ))}
+        </Select>
+        <Select
+          placeholder="Select Semester"
+          onChange={(value) => setSelectedSemester(value)}
+          value={selectedSemester}
+          className="semester-select"
+        >
+          {[
+            ...new Set(classes.map((classItem) => classItem.semester_name)),
+          ].map((semester) => (
+            <Option key={semester} value={semester}>
+              {semester}
+            </Option>
+          ))}
+        </Select>
         <Button onClick={clearFilters} className="clear-filters-btn">
           Clear Filters
         </Button>
       </div>
 
-      {loading ? (
-        <div className="loading-container">
-          <Spin size="large" />
-        </div>
-      ) : error ? (
-        <Alert message={error} type="error" />
-      ) : (
-        <Row gutter={[24, 24]} className="class-list__grid">
-          {filteredClasses.map((classItem) => (
-            <Col xs={24} sm={12} md={8} lg={6} key={classItem.id}>
-              <Card
-                hoverable
-                className="class-card"
-                actions={[
-                  <Button
-                    key={`edit-${classItem.id}`}
-                    onClick={() => handleEditClass(classItem.id)}
-                    type="link"
-                  >
-                    Edit
-                  </Button>,
-                  <Button
-                    key={`delete-${classItem.id}`}
-                    onClick={() => showDeleteConfirm(classItem.id)}
-                    type="link"
-                    danger
-                  >
-                    Delete
-                  </Button>,
-                ]}
-              >
-                <div className="class-card__header">
-                  <Avatar size={64} className="class-avatar">
-                    {classItem.name.charAt(0)}
-                  </Avatar>
-                  <Title level={4}>{classItem.name}</Title>
-                </div>
-                <div className="class-card__content">
-                  <Text strong>Faculty:</Text>
-                  <Text>{getFacultyName(classItem.faculty_id)}</Text>
-                  <Text strong>Teacher:</Text>
-                  <Text>{getTeacherName(classItem.teacher_id)}</Text>
-                  <Text strong>Class ID:</Text>
-                  <Text>{classItem.id}</Text>
-                </div>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      )}
+      <Row gutter={[24, 24]} className="class-list__grid">
+        {filteredClasses.map((classItem) => (
+          <Col xs={24} sm={12} md={8} lg={6} key={classItem.id}>
+            <Card
+              hoverable
+              className="class-card"
+              actions={[
+                <Button
+                  key={`edit-${classItem.id}`}
+                  onClick={() => handleEditClass(classItem.id)}
+                  type="link"
+                >
+                  Edit
+                </Button>,
+                <Button
+                  key={`delete-${classItem.id}`}
+                  onClick={() => showDeleteConfirm(classItem.id)}
+                  type="link"
+                  danger
+                >
+                  Delete
+                </Button>,
+              ]}
+            >
+              <div className="class-card__header">
+                <Avatar size={64} className="class-avatar">
+                  {classItem.name.charAt(0)}
+                </Avatar>
+                <Title level={4}>{classItem.name}</Title>
+              </div>
+              <div className="class-card__content">
+                <Text strong>Faculty:</Text>
+                <Text>{classItem.faculty_name}</Text>
+                <Text strong>Teacher:</Text>
+                <Text>{classItem.teacher_name}</Text>
+                <Text strong>Academic Year:</Text>
+                <Text>{classItem.academic_year_name}</Text>
+                <Text strong>Semester:</Text>
+                <Text>{classItem.semester_name}</Text>
+              </div>
+            </Card>
+          </Col>
+        ))}
+      </Row>
     </div>
   );
 };

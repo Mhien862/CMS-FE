@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { Form, Input, Button, Select, notification, Checkbox } from "antd";
-import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
+import {
+  CheckCircleOutlined,
+  WarningOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRole } from "../../hook/useRole";
 import { useFaculty } from "../../hook/useFaculty";
@@ -136,7 +140,7 @@ const EditUserForm = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+            <Button type="primary" htmlType="submit" icon={<EditOutlined />}>
               Update User
             </Button>
           </Form.Item>

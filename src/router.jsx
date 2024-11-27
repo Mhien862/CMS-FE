@@ -17,6 +17,9 @@ import LayoutStudent from "./layout/layoutStudent";
 import ClassFolders from "./student/myClass";
 import SubmitAssignment from "./student/submitAssignment";
 import FolderPage from "./teacher/folderPage";
+import CreateAcademicYear from "./admin/AcademicYear/CreateAcademicYear";
+import ManageSemesters from "./admin/AcademicYear/ManageSemesters";
+import AcademicYearPage from "./admin/AcademicYear/ClassHierarchy";
 
 // ProtectedRoute component
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -99,6 +102,18 @@ const router = createBrowserRouter([
       {
         path: "list-faculty",
         element: <FacultyList />,
+      },
+      {
+        path: "academic-year-create",
+        element: <CreateAcademicYear />,
+      },
+      {
+        path: "academic-year/manage-semesters",
+        element: <ManageSemesters />,
+      },
+      {
+        path: "academic-year",
+        element: <AcademicYearPage />,
       },
     ],
   },
