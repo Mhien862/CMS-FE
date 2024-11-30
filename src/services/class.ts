@@ -84,9 +84,8 @@ export const createFolder = async (classId: string | number, data: FolderData) =
 export const getFoldersByClassId = async (classId: string) => {
   try {
     const response = await axiosInstance.get(`/class/${classId}/folders`);
-    // Kiểm tra đúng cấu trúc trả về từ API
     if (response?.data?.folders) {
-      return response.data.folders; // Trả về danh sách folder
+      return response.data.folders; 
     } else {
       throw new Error("Unexpected data structure from API");
     }
@@ -159,7 +158,7 @@ export const getAssignmentsByFolder = async (classId: string, folderId: string) 
   }
 };
 
-// New function for grading an assignment
+
 export const gradeAssignment = async (classId: string, assignmentId: string, gradeData: GradeData) => {
   try {
     const response = await axiosInstance.put(`/class/${classId}/assignments/${assignmentId}/grade`, gradeData);
@@ -186,7 +185,7 @@ export const getStudentsInClass = async (classId: string) => {
 };
 
 
-// services/class.ts
+
 export const getStudentsGradesInClass = async (classId: string) => {
   try {
     console.log('Fetching grades for class:', classId);

@@ -23,7 +23,7 @@ const CreateClassForm = () => {
   const navigate = useNavigate();
   const { faculty, loading: loadingFaculty } = useFaculty();
 
-  // Fetch danh sách giáo viên
+  // data teachers
   const fetchTeachers = async () => {
     try {
       const response = await getListTeacher();
@@ -35,7 +35,7 @@ const CreateClassForm = () => {
     }
   };
 
-  // Fetch danh sách năm học
+  // data academic years
   const fetchAcademicYears = async () => {
     try {
       const response = await getAcademicYears();
@@ -45,7 +45,7 @@ const CreateClassForm = () => {
     }
   };
 
-  // Fetch danh sách học kỳ theo năm học
+  // data semesters
   const fetchSemesters = async (academicYearId) => {
     try {
       const response = await getSemestersByYear(academicYearId);
@@ -66,12 +66,12 @@ const CreateClassForm = () => {
       (teacher) => teacher.faculty_id === facultyId
     );
     setFilteredTeachers(filtered);
-    form.setFieldsValue({ teacher_id: undefined }); // Reset teacher select
+    form.setFieldsValue({ teacher_id: undefined });
   };
 
   const handleAcademicYearChange = (academicYearId) => {
     fetchSemesters(academicYearId);
-    form.setFieldsValue({ semester_id: undefined }); // Reset semester select
+    form.setFieldsValue({ semester_id: undefined });
   };
 
   const onFinish = async (values) => {

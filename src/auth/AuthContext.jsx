@@ -30,13 +30,13 @@ function Login() {
 
   const redirectBasedOnRole = (roleId) => {
     switch (roleId) {
-      case 1:
+      case 1: // Admin role
         navigate("/list-user");
         break;
-      case 2:
+      case 2: // Teacher role
         navigate("/teacher/class-teacher");
         break;
-      default:
+      default: // Student role or any other role
         navigate("/student/class-student");
         break;
     }
@@ -49,21 +49,23 @@ function Login() {
 
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+
       window.dispatchEvent(new Event("storage"));
 
       notification.success({
-        message: "Đăng nhập thành công!",
-        description: "Chào mừng bạn đến với hệ thống!",
+        message: "Login Successful!",
+        description: "Welcome to the system!",
       });
 
       redirectBasedOnRole(user.role_id);
     } catch (error) {
       console.error(error);
       const errorMessage =
-        error.response?.data?.message || "Đã xảy ra lỗi. Vui lòng thử lại sau.";
+        error.response?.data?.message ||
+        "An error occurred. Please try again later.";
 
       notification.error({
-        message: "Đăng nhập thất bại!",
+        message: "Login Failed!",
         description: errorMessage,
       });
     }
@@ -79,7 +81,7 @@ function Login() {
         <div className="input-login">
           <Form.Item
             name="email"
-            rules={[{ required: true, message: "Vui lòng nhập email!" }]}
+            rules={[{ required: true, message: "Please enter your email!" }]}
           >
             <Input
               type="email"
@@ -93,7 +95,7 @@ function Login() {
         <div className="input-password">
           <Form.Item
             name="password"
-            rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
+            rules={[{ required: true, message: "Please enter your password!" }]}
           >
             <Input.Password
               size="large"

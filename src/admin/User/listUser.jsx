@@ -315,7 +315,7 @@ const ListUser = () => {
             </Option>
           ))}
         </Select>
-        {/* Select for Faculty */}
+
         <Select
           placeholder="Select Faculty"
           onChange={handleFacultyChange}

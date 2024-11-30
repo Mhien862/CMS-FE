@@ -140,7 +140,6 @@ const StudentList = ({ classId }) => {
     },
   ];
 
-  // Render class details in modal
   const renderClassItem = (item) => (
     <List.Item>
       <List.Item.Meta
@@ -217,10 +216,7 @@ const FolderList = ({ folders, onFolderClick }) => {
                   {folder.name || "Unnamed Folder"}
                 </Text>
               </Space>
-              <Space className="folder-info">
-                <UserOutlined />
-                <Text>Created by: {folder.created_by || "Unknown"}</Text>
-              </Space>
+
               <Space className="folder-info">
                 <CalendarOutlined />
                 <Text>
@@ -238,7 +234,6 @@ const FolderList = ({ folders, onFolderClick }) => {
   );
 };
 
-// Main ClassPage Component
 const ClassPage = () => {
   const { classId } = useParams();
   const navigate = useNavigate();
@@ -281,13 +276,13 @@ const ClassPage = () => {
   }, [classId]);
 
   const handleFolderClick = (folderId) => {
-    navigate(`/teacher/class/${classId}/folder/${folderId}`); // Điều hướng đến trang chi tiết folder
+    navigate(`/teacher/class/${classId}/folder/${folderId}`);
   };
 
   const handleOk = async () => {
     try {
       await createFolder(classId, { name: folderName });
-      notification.success({ message: "Folder created successfully" });
+      notification.success({ message: "Assignment created successfully" });
       setIsModalVisible(false);
       setFolderName("");
       fetchFolders();
@@ -335,7 +330,7 @@ const ClassPage = () => {
             tab={
               <span>
                 <FolderOutlined />
-                Folders
+                Assignments
               </span>
             }
             key="1"
@@ -347,7 +342,7 @@ const ClassPage = () => {
                 onClick={() => setIsModalVisible(true)}
                 style={{ marginBottom: "16px" }}
               >
-                Create Folder
+                Create Assignment
               </Button>
               <FolderList folders={folders} onFolderClick={handleFolderClick} />
             </Space>
@@ -367,13 +362,13 @@ const ClassPage = () => {
         </Tabs>
 
         <Modal
-          title="Create New Folder"
+          title="Create New Assignment"
           visible={isModalVisible}
           onOk={handleOk}
           onCancel={handleCancel}
         >
           <Input
-            placeholder="Enter folder name"
+            placeholder="Enter assignment name"
             value={folderName}
             onChange={(e) => setFolderName(e.target.value)}
           />

@@ -5,8 +5,8 @@ body {
 .login-container {
   max-width: 400px;
   margin: auto;
-  padding: 40px; // Tăng padding để giống Facebook
-  background-color: #ffffff; // Màu nền trắng
+  padding: 40px;
+  background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   font-family: cursive;
@@ -16,19 +16,11 @@ body {
 .login-title {
   text-align: center;
   margin-bottom: 50px;
-  font-size: 24px; // Kích thước chữ lớn hơn
-  font-weight: 400; // Chữ đậm
+  font-size: 24px;
+  font-weight: 400;
   color: #1877f2 !important;
   padding-bottom: 20px;
 }
-
-// .input-field {
-//   width: 100%;
-//   padding: 10px;
-//   margin: 10px 0; // Khoảng cách giữa các trường
-//   border: 1px solid #ccc; // Đường viền nhẹ
-//   border-radius: 5px; // Bo góc
-// }
 
 .button-login {
   span {
@@ -46,33 +38,6 @@ body {
     padding: 0 16px;
   }
 }
-
-// .input-login {
-//   .ant-input {
-//     width: 330px;
-//     height: 40px;
-//   }
-// }
-
-// .input-password {
-//   .ant-input {
-//     width: 130px;
-//     height: 30px;
-//   }
-//   .ant-input-suffix {
-//     margin-left: 150px;
-//   }
-// }
-// {
-//   width: 100%;
-//   padding: 1000px;
-//   background-color: #1877f2; // Màu nền nút giống Facebook
-//   color: white; // Màu chữ trắng
-//   border: none;
-//   border-radius: 5px;
-//   cursor: pointer;
-//   font-size: 16px; // Kích thước chữ
-// }
 
 .button:hover {
   background-color: #165eab; // Màu nền khi hover

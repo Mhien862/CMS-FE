@@ -39,7 +39,7 @@ const EditClassForm = () => {
         semester_id: response.data.semester_id,
       });
 
-      // Fetch semesters for the academic year
+      // data semesters by academic year
       if (response.data.academic_year_id) {
         fetchSemesters(response.data.academic_year_id);
       }
@@ -253,7 +253,7 @@ const EditClassForm = () => {
           </Form.Item>
 
           <Button type="primary" htmlType="submit" icon={<EditOutlined />}>
-            Update User
+            Update Class
           </Button>
         </Form>
       </div>

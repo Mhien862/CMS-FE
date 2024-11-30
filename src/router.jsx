@@ -21,7 +21,6 @@ import CreateAcademicYear from "./admin/AcademicYear/CreateAcademicYear";
 import ManageSemesters from "./admin/AcademicYear/ManageSemesters";
 import AcademicYearPage from "./admin/AcademicYear/ClassHierarchy";
 
-// ProtectedRoute component
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const user = JSON.parse(localStorage.getItem("user"));
   const isAuthenticated = !!user;

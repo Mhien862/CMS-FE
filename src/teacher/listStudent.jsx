@@ -18,8 +18,6 @@ import {
 
 const { Title } = Typography;
 
-// StudentList Component
-// StudentList Component trong ClassPage
 const StudentList = ({ classId }) => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);

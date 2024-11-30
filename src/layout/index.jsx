@@ -19,6 +19,7 @@ import {
   Dropdown,
   Input,
   Avatar,
+  notification,
 } from "antd";
 import { getMe } from "../services/user";
 import "./style.scss";
@@ -53,14 +54,23 @@ const Layout = () => {
   };
 
   const handleTokenExpiration = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    localStorage.clear("token");
+    localStorage.clear("user");
     setUser(null);
     navigate("/login");
   };
 
   const handleLogout = () => {
-    handleTokenExpiration();
+    localStorage.clear("token");
+    localStorage.clear("user");
+    setUser(null);
+
+    notification.success({
+      message: "Logged Out Successfully",
+      description: "Thank you for using our system!",
+    });
+
+    navigate("/login");
   };
 
   const userMenu = (

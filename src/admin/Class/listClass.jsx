@@ -39,7 +39,7 @@ const ClassList = () => {
   const navigate = useNavigate();
   const { faculty } = useFaculty();
 
-  // Fetch classes
+  // data all classes
   const getClasses = async () => {
     try {
       const response = await getAllClass();
@@ -53,7 +53,6 @@ const ClassList = () => {
     }
   };
 
-  // Fetch teachers
   const getTeachers = async () => {
     try {
       const response = await getListTeacher();

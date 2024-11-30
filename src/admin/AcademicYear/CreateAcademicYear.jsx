@@ -8,7 +8,6 @@ const CreateAcademicYear = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  // Generate year options from current year to 10 years ahead
   const yearOptions = useMemo(() => {
     const currentYear = new Date().getFullYear();
     return Array.from({ length: 10 }, (_, i) => ({

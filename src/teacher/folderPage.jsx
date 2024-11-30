@@ -32,7 +32,6 @@ const { Search } = Input;
 const { TextArea } = Input;
 
 const FolderPage = () => {
-  // State Management
   const { classId, folderId } = useParams();
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,12 +44,10 @@ const FolderPage = () => {
   const [tableLoading, setTableLoading] = useState(false);
   const [gradeError, setGradeError] = useState("");
 
-  // Initial Data Fetch
   useEffect(() => {
     fetchAssignments();
   }, [classId, folderId]);
 
-  // Data Fetching Function
   const fetchAssignments = async () => {
     try {
       setLoading(true);
@@ -67,31 +64,26 @@ const FolderPage = () => {
     }
   };
 
-  // Grade Validation
   const validateGrade = (value) => {
-    // Check if value is empty
     if (!value || value.trim() === "") {
-      setGradeError("Vui lòng nhập điểm!");
+      setGradeError("Please enter a grade!");
       return false;
     }
 
     const numberValue = Number(value);
 
-    // Check if it's a valid number
     if (isNaN(numberValue)) {
-      setGradeError("Điểm phải là số!");
+      setGradeError("Grade must be a number!");
       return false;
     }
 
-    // Check if it's an integer
     if (!Number.isInteger(numberValue)) {
-      setGradeError("Điểm phải là số nguyên!");
+      setGradeError("Grade must be an integer!");
       return false;
     }
 
-    // Check range
     if (numberValue < 1 || numberValue > 10) {
-      setGradeError("Điểm phải từ 1 đến 10!");
+      setGradeError("Grade must be between 1 and 10!");
       return false;
     }
 
@@ -105,20 +97,19 @@ const FolderPage = () => {
     validateGrade(value);
   };
 
-  // Grade Modal Handlers
   const handleGrade = (assignment) => {
     setCurrentAssignment(assignment);
     form.setFieldsValue({
       grade: assignment.grade || "",
       comment: assignment.comment || "",
     });
-    setGradeError(""); // Reset grade error when opening modal
+    setGradeError("");
     setGradeModalVisible(true);
   };
 
   const handleGradeModalClose = () => {
     setGradeModalVisible(false);
-    setGradeError(""); // Reset grade error when closing modal
+    setGradeError("");
     form.resetFields();
     setCurrentAssignment(null);
   };
@@ -127,7 +118,6 @@ const FolderPage = () => {
     try {
       const values = form.getFieldsValue();
 
-      // Validate grade before submitting
       if (!validateGrade(values.grade)) {
         return;
       }
@@ -139,20 +129,20 @@ const FolderPage = () => {
         comment: values.comment,
       });
 
-      message.success("Đã chấm điểm thành công!");
+      message.success("Grade submitted successfully!");
       handleGradeModalClose();
       await fetchAssignments();
     } catch (error) {
       console.error("Error submitting grade:", error);
       message.error(
-        "Lỗi khi chấm điểm: " + (error.response?.data?.message || error.message)
+        "Error submitting grade: " +
+          (error.response?.data?.message || error.message)
       );
     } finally {
       setTableLoading(false);
     }
   };
 
-  // Sort and Filter Functions
   const toggleSort = () => {
     setSortUngradedFirst(!sortUngradedFirst);
   };
@@ -176,10 +166,9 @@ const FolderPage = () => {
     return "red";
   };
 
-  // Table Columns Configuration
   const columns = [
     {
-      title: "Tên sinh viên",
+      title: "Student Name",
       dataIndex: "student_name",
       key: "student_name",
       render: (text) => (
@@ -190,7 +179,7 @@ const FolderPage = () => {
       width: "15%",
     },
     {
-      title: "Tiêu đề",
+      title: "Title",
       dataIndex: "title",
       key: "title",
       width: "25%",
@@ -206,7 +195,7 @@ const FolderPage = () => {
       ),
     },
     {
-      title: "Thời gian nộp",
+      title: "Submission Time",
       dataIndex: "submitted_at",
       key: "submitted_at",
       width: "20%",
@@ -217,7 +206,7 @@ const FolderPage = () => {
       ),
     },
     {
-      title: "File nộp",
+      title: "Submitted File",
       key: "file",
       width: "15%",
       render: (_, record) =>
@@ -229,20 +218,20 @@ const FolderPage = () => {
               href={record.file_url}
               target="_blank"
             >
-              Tải xuống
+              Download
             </Button>
           </Space>
         ),
     },
     {
-      title: "Điểm & Nhận xét",
+      title: "Grade & Comments",
       key: "grade",
       width: "25%",
       render: (_, record) => (
         <Space direction="vertical" size="small">
           <Space>
             <Tag color={getGradeColor(record.grade)}>
-              {record.grade ? `Điểm: ${record.grade}/10` : "Chưa chấm điểm"}
+              {record.grade ? `Grade: ${record.grade}/10` : "Not Graded"}
             </Tag>
             <Button
               type="primary"
@@ -250,7 +239,7 @@ const FolderPage = () => {
               onClick={() => handleGrade(record)}
               size="small"
             >
-              {record.grade ? "Cập nhật" : "Chấm điểm"}
+              {record.grade ? "Update" : "Grade"}
             </Button>
           </Space>
           {record.comment && (
@@ -263,7 +252,6 @@ const FolderPage = () => {
     },
   ];
 
-  // Loading State
   if (loading) {
     return (
       <div className="loading-container">
@@ -272,7 +260,6 @@ const FolderPage = () => {
     );
   }
 
-  // Main Render
   return (
     <div className="folder-page">
       <motion.div
@@ -282,16 +269,15 @@ const FolderPage = () => {
       >
         <Card>
           <Space direction="vertical" style={{ width: "100%", gap: "20px" }}>
-            {/* Header Section */}
             <Space style={{ justifyContent: "space-between", width: "100%" }}>
               <Title level={2} style={{ margin: 0 }}>
-                Danh sách bài nộp
+                Submissions List
               </Title>
               <Space>
                 <Search
-                  placeholder="Tìm theo tên sinh viên"
+                  placeholder="Search by student name"
                   allowClear
-                  enterButton="Tìm kiếm"
+                  enterButton="Search"
                   onChange={(e) => setSearchText(e.target.value)}
                   style={{ width: 300 }}
                 />
@@ -300,17 +286,14 @@ const FolderPage = () => {
                   icon={<SortAscendingOutlined />}
                   onClick={toggleSort}
                 >
-                  {sortUngradedFirst
-                    ? "Hiện thị tất cả"
-                    : "Hiện bài chưa chấm trước"}
+                  {sortUngradedFirst ? "Show All" : "Show Ungraded First"}
                 </Button>
               </Space>
             </Space>
 
-            {/* Error Alert */}
             {error && (
               <Alert
-                message="Lỗi"
+                message="Error"
                 description={error}
                 type="error"
                 showIcon
@@ -318,11 +301,10 @@ const FolderPage = () => {
               />
             )}
 
-            {/* Table Section */}
             {assignments.length === 0 ? (
               <Alert
-                message="Không có bài nộp"
-                description="Chưa có bài nộp nào trong thư mục này."
+                message="No Submissions"
+                description="There are no submissions in this folder yet."
                 type="info"
                 showIcon
                 className="info-alert"
@@ -334,7 +316,7 @@ const FolderPage = () => {
                 rowKey="id"
                 pagination={{
                   pageSize: 10,
-                  showTotal: (total) => `Tổng số ${total} bài nộp`,
+                  showTotal: (total) => `Total ${total} submissions`,
                 }}
                 loading={tableLoading}
                 scroll={{ x: 1200 }}
@@ -343,26 +325,25 @@ const FolderPage = () => {
           </Space>
         </Card>
 
-        {/* Grade Modal */}
         <Modal
-          title={`Chấm điểm - ${currentAssignment?.student_name}`}
+          title={`Grade Assignment - ${currentAssignment?.student_name}`}
           visible={gradeModalVisible}
           onOk={submitGrade}
           onCancel={handleGradeModalClose}
           width={600}
-          okText="Xác nhận"
-          cancelText="Hủy"
+          okText="Confirm"
+          cancelText="Cancel"
           confirmLoading={tableLoading}
         >
           <Form form={form} layout="vertical">
             <Form.Item
               name="grade"
-              label="Điểm (1-10)"
+              label="Grade (1-10)"
               help={gradeError}
               validateStatus={gradeError ? "error" : ""}
             >
               <Input
-                placeholder="Nhập điểm từ 1 đến 10"
+                placeholder="Enter grade from 1 to 10"
                 onChange={handleGradeChange}
                 type="number"
                 suffix="/10"
@@ -370,16 +351,16 @@ const FolderPage = () => {
             </Form.Item>
             <Form.Item
               name="comment"
-              label="Nhận xét"
+              label="Comments"
               rules={[
                 {
                   max: 500,
-                  message: "Nhận xét không được vượt quá 500 ký tự",
+                  message: "Comments cannot exceed 500 characters",
                 },
               ]}
             >
               <TextArea
-                placeholder="Nhập nhận xét cho bài nộp"
+                placeholder="Enter comments for the submission"
                 rows={4}
                 showCount
                 maxLength={500}
