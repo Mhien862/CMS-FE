@@ -19,3 +19,8 @@ export const updateFaculty = async (facultyData: FacultyData, id: string) => {
     const response = await axiosInstance.put(`faculty/update/${id}`, facultyData);
     return response.data;
 }
+
+export const deleteFaculty = async (id: string) => {
+    const response = await axiosInstance.delete(`faculty/delete/${id}`);
+    return response.data;
+}

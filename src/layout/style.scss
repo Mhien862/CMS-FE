@@ -332,18 +332,18 @@ $transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         display: flex;
         align-items: center;
 
-        .notification-badge {
-          margin-right: 24px;
+        // .notification-badge {
+        //   margin-right: 24px;
 
-          .notification-icon {
-            font-size: 20px;
-            color: #8c8c8c;
+        //   .notification-icon {
+        //     font-size: 20px;
+        //     color: #8c8c8c;
 
-            &:hover {
-              color: #1890ff;
-            }
-          }
-        }
+        //     &:hover {
+        //       color: #1890ff;
+        //     }
+        //   }
+        // }
 
         .user-dropdown {
           display: flex;

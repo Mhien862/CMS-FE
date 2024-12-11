@@ -14,11 +14,17 @@ import {
   getAllFaculty,
   createFaculty,
   updateFaculty,
+  deleteFaculty,
 } from "../../services/faculty";
 import "./style.scss";
-import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
 
 const { Title } = Typography;
+const { confirm } = Modal;
 
 const FacultyList = () => {
   const [faculties, setFaculties] = useState([]);
@@ -94,6 +100,36 @@ const FacultyList = () => {
     }
   };
 
+  const showDeleteConfirm = (facultyId, facultyName) => {
+    confirm({
+      title: "Are you sure you want to delete this faculty?",
+      icon: <ExclamationCircleOutlined />,
+      content: `Faculty: ${facultyName}`,
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk: async () => {
+        try {
+          setLoading(true);
+          await deleteFaculty(facultyId);
+          notification.success({
+            message: "Success",
+            description: "Faculty deleted successfully",
+            icon: <CheckCircleOutlined style={{ color: "#52c41a" }} />,
+          });
+          fetchFaculties();
+        } catch (error) {
+          console.error("Error deleting faculty:", error);
+          notification.error(
+            error.response?.data?.message || "Failed to delete faculty"
+          );
+        } finally {
+          setLoading(false);
+        }
+      },
+    });
+  };
+
   const handleEditClick = (faculty) => {
     setIsEditMode(true);
     setCurrentFacultyId(faculty.id);
@@ -115,13 +151,22 @@ const FacultyList = () => {
     {
       title: "Action",
       key: "action",
-      render: (text, faculty) => (
-        <Button
-          icon={<EditOutlined />}
-          onClick={() => handleEditClick(faculty)}
-        >
-          Edit
-        </Button>
+      render: (_, record) => (
+        <Space>
+          <Button
+            icon={<EditOutlined />}
+            onClick={() => handleEditClick(record)}
+          >
+            Edit
+          </Button>
+          <Button
+            danger
+            onClick={() => showDeleteConfirm(record.id, record.name)}
+            disabled={loading}
+          >
+            Delete
+          </Button>
+        </Space>
       ),
     },
   ];
