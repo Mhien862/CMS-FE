@@ -11,15 +11,15 @@ import {
   Spin,
   List,
   Tabs,
-  Table,
   Tag,
+  Table,
 } from "antd";
 import {
   FolderOutlined,
   PlusOutlined,
-  UserOutlined,
   CalendarOutlined,
   TeamOutlined,
+  LeftOutlined,
 } from "@ant-design/icons";
 import {
   getClassById,
@@ -207,7 +207,7 @@ const FolderList = ({ folders, onFolderClick }) => {
           <Card
             hoverable
             className="folder-card"
-            onClick={() => onFolderClick(folder.id)} // Gọi hàm điều hướng khi nhấn
+            onClick={() => onFolderClick(folder.id)}
           >
             <Space direction="vertical">
               <Space>
@@ -308,6 +308,16 @@ const ClassPage = () => {
 
   return (
     <div className="class-page">
+      {/* Nút quay lại */}
+      <Button
+        type="text"
+        icon={<LeftOutlined />}
+        onClick={() => navigate(-1)}
+        style={{ marginBottom: "16px" }}
+      >
+        Back
+      </Button>
+
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
         <Card className="class-info-card">
           <Title level={2}>{classInfo.name}</Title>

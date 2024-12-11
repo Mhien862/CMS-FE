@@ -22,10 +22,12 @@ import {
   UserOutlined,
   CommentOutlined,
   DownloadOutlined,
+  ArrowLeftOutlined,
 } from "@ant-design/icons";
 import { getAssignmentsByFolder, gradeAssignment } from "../services/class";
 import { motion } from "framer-motion";
 import "./style.scss";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 const { Search } = Input;
@@ -43,6 +45,7 @@ const FolderPage = () => {
   const [searchText, setSearchText] = useState("");
   const [tableLoading, setTableLoading] = useState(false);
   const [gradeError, setGradeError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchAssignments();
@@ -270,6 +273,13 @@ const FolderPage = () => {
         <Card>
           <Space direction="vertical" style={{ width: "100%", gap: "20px" }}>
             <Space style={{ justifyContent: "space-between", width: "100%" }}>
+              <Button
+                type="text"
+                icon={<ArrowLeftOutlined />}
+                onClick={() => navigate(-1)}
+                style={{ fontSize: "18px" }}
+              />
+
               <Title level={2} style={{ margin: 0 }}>
                 Submissions List
               </Title>

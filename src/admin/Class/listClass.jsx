@@ -170,6 +170,8 @@ const ClassList = () => {
   if (loading) return <Spin size="large" />;
   if (error) return <Alert message={error} type="error" />;
 
+  // console.log(classes);
+  console.log(filteredClasses);
   return (
     <div className="class-list">
       <div className="class-list__header">

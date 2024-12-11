@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Form, Input, Button, Select, notification } from "antd";
-import { BookOutlined } from "@ant-design/icons";
+import { BookOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import { createClass, getListTeacher } from "../../services/class";
 import {
   getAcademicYears,
@@ -98,6 +98,13 @@ const CreateClassForm = () => {
 
   return (
     <div className="create-class-container">
+      <Button
+        className="back-button"
+        type="text"
+        icon={<ArrowLeftOutlined />}
+        onClick={() => navigate(-1)}
+      />
+
       <div className="form-card">
         <div className="form-title">
           <h2>Create New Class</h2>

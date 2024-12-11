@@ -4,6 +4,7 @@ import {
   CheckCircleOutlined,
   WarningOutlined,
   EditOutlined,
+  ArrowLeftOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRole } from "../../hook/useRole";
@@ -75,6 +76,12 @@ const EditUserForm = () => {
 
   return (
     <div className="edit-user" style={{ padding: 20 }}>
+      <Button
+        className="back-button"
+        type="text"
+        icon={<ArrowLeftOutlined />}
+        onClick={() => navigate(-1)}
+      />
       <div className="form-container">
         <h2>Edit User</h2>
         <Form

@@ -247,28 +247,28 @@
   }
 }
 
-.ant-notification-notice {
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+// .ant-notification-notice {
+//   border-radius: 12px;
+//   padding: 16px;
+//   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 
-  &.ant-notification-notice-success {
-    border-left: 4px solid #52c41a;
-  }
+//   &.ant-notification-notice-success {
+//     border-left: 4px solid #52c41a;
+//   }
 
-  &.ant-notification-notice-error {
-    border-left: 4px solid #ff4d4f;
-  }
+//   &.ant-notification-notice-error {
+//     border-left: 4px solid #ff4d4f;
+//   }
 
-  .ant-notification-notice-message {
-    font-size: 16px;
-    font-weight: 500;
-  }
+//   .ant-notification-notice-message {
+//     font-size: 16px;
+//     font-weight: 500;
+//   }
 
-  .ant-notification-notice-description {
-    font-size: 14px;
-  }
-}
+//   .ant-notification-notice-description {
+//     font-size: 14px;
+//   }
+// }
 
 // Responsive styles
 @media (max-width: 768px) {
@@ -544,33 +544,33 @@
 }
 
 // Custom notification styles
-.ant-notification-notice {
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+// .ant-notification-notice {
+//   border-radius: 12px;
+//   padding: 16px;
+//   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 
-  &.ant-notification-notice-success {
-    border-left: 4px solid #52c41a;
-  }
+//   &.ant-notification-notice-success {
+//     border-left: 4px solid #52c41a;
+//   }
 
-  &.ant-notification-notice-error {
-    border-left: 4px solid #ff4d4f;
-  }
+//   &.ant-notification-notice-error {
+//     border-left: 4px solid #ff4d4f;
+//   }
 
-  .ant-notification-notice-message {
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 4px;
-  }
+//   .ant-notification-notice-message {
+//     font-size: 16px;
+//     font-weight: 500;
+//     margin-bottom: 4px;
+//   }
 
-  .ant-notification-notice-description {
-    font-size: 14px;
-  }
+//   .ant-notification-notice-description {
+//     font-size: 14px;
+//   }
 
-  .ant-notification-notice-icon {
-    font-size: 20px;
-  }
-}
+//   .ant-notification-notice-icon {
+//     font-size: 20px;
+//   }
+// }
 
 // Responsive styles
 @media (max-width: 768px) {

@@ -135,9 +135,6 @@ function TeacherClasses() {
                     >
                       Enter Class
                     </Button>
-                    <Button type="default" icon={<InfoCircleOutlined />}>
-                      View Details
-                    </Button>
                   </div>
                 </Card>
               </motion.div>

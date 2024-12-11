@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Form, Select, Input, Button, notification } from "antd";
+import { Form, Select, Input, Button, notification, message } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
 import { createAcademicYear } from "../../services/academicYearService";
 import "./style.scss";
@@ -7,6 +7,7 @@ import "./style.scss";
 const CreateAcademicYear = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [selectedStartYear, setSelectedStartYear] = useState(null);
 
   const yearOptions = useMemo(() => {
     const currentYear = new Date().getFullYear();
@@ -16,27 +17,43 @@ const CreateAcademicYear = () => {
     }));
   }, []);
 
+  const endYearOptions = useMemo(() => {
+    if (!selectedStartYear) return [];
+    return yearOptions.filter((option) => option.value > selectedStartYear);
+  }, [selectedStartYear, yearOptions]);
+
   const handleStartYearChange = (value) => {
-    const endYear = value + 1;
+    setSelectedStartYear(value);
     form.setFieldsValue({
-      end_year: endYear,
-      name: ` ${value}-${endYear}`,
+      end_year: null,
+      name: null,
     });
+  };
+
+  const handleEndYearChange = (value) => {
+    const startYear = form.getFieldValue("start_year");
+    if (startYear) {
+      form.setFieldsValue({
+        name: `${startYear}-${value}`,
+      });
+    }
   };
 
   const onFinish = async (values) => {
     setLoading(true);
     try {
       await createAcademicYear(values);
-      notification.success({
+      message.success({
         content: "Academic year created successfully!",
+        placement: "topRight",
         style: {
           marginTop: "20px",
         },
       });
       form.resetFields();
+      setSelectedStartYear(null);
     } catch {
-      notification.error({
+      message.error({
         content: "Failed to create academic year",
         style: {
           marginTop: "20px",
@@ -61,19 +78,6 @@ const CreateAcademicYear = () => {
           onFinish={onFinish}
           requiredMark={false}
         >
-          <Form.Item
-            label="Academic Year Name"
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: "Please input the academic year name!",
-              },
-            ]}
-          >
-            <Input placeholder="e.g., Academic Year 2024-2025" />
-          </Form.Item>
-
           <div className="year-selects">
             <Form.Item
               label="Start Year"
@@ -90,15 +94,41 @@ const CreateAcademicYear = () => {
             <Form.Item
               label="End Year"
               name="end_year"
-              rules={[{ required: true, message: "Please select end year!" }]}
+              rules={[
+                { required: true, message: "Please select end year!" },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("start_year") < value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("End year must be after start year!")
+                    );
+                  },
+                }),
+              ]}
             >
               <Select
                 placeholder="Select end year"
-                options={yearOptions}
-                disabled
+                options={endYearOptions}
+                disabled={!selectedStartYear}
+                onChange={handleEndYearChange}
               />
             </Form.Item>
           </div>
+
+          <Form.Item
+            label="Academic Year Name"
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "Please input the academic year name!",
+              },
+            ]}
+          >
+            <Input placeholder="e.g., Academic Year 2024-2025" />
+          </Form.Item>
 
           <Button
             type="primary"

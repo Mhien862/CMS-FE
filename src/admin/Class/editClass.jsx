@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Form, Input, Button, Select, notification, Spin } from "antd";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import { useParams, useNavigate } from "react-router-dom";
 import { getClassById, getListTeacher } from "../../services/class";
 import { useFaculty } from "../../hook/useFaculty";
@@ -154,6 +154,12 @@ const EditClassForm = () => {
 
   return (
     <div className="edit-class-container">
+      <Button
+        className="back-button"
+        type="text"
+        icon={<ArrowLeftOutlined />}
+        onClick={() => navigate(-1)}
+      />
       <div className="form-card">
         <div className="form-title">
           <h2>Edit Class</h2>
@@ -252,7 +258,12 @@ const EditClassForm = () => {
             <Input.Password placeholder="Enter class code" />
           </Form.Item>
 
-          <Button type="primary" htmlType="submit" icon={<EditOutlined />}>
+          <Button
+            className="submit-button"
+            type="primary"
+            htmlType="submit"
+            icon={<EditOutlined />}
+          >
             Update Class
           </Button>
         </Form>

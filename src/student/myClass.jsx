@@ -1,11 +1,20 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { notification, Card, Typography, Spin, List, Avatar } from "antd";
+import {
+  notification,
+  Card,
+  Typography,
+  Spin,
+  List,
+  Avatar,
+  Button,
+} from "antd";
 import {
   FolderOutlined,
   UserOutlined,
   CalendarOutlined,
-} from "@ant-design/icons";
+  LeftOutlined,
+} from "@ant-design/icons"; // Import LeftOutlined
 import { getClassById, getFoldersForStudent } from "../services/class";
 import { motion } from "framer-motion";
 import "./style.scss";
@@ -64,6 +73,10 @@ const ClassFolders = () => {
     }
   }, [classId, fetchClassInfo, fetchFolders]);
 
+  const handleGoBack = () => {
+    navigate(-1); // Navigate back to the previous page
+  };
+
   if (loading) {
     return (
       <div className="loading-container">
@@ -83,6 +96,16 @@ const ClassFolders = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
+        {/* Button with ArrowLeft Icon */}
+        <Button
+          onClick={handleGoBack}
+          icon={<LeftOutlined />}
+          className="go-back-button"
+          type="text"
+        >
+          Go Back
+        </Button>
+
         <Title level={2}>{classInfo.name}</Title>
 
         <Card className="class-info-card">

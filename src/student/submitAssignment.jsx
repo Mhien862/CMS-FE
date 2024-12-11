@@ -19,8 +19,9 @@ import {
   ClockCircleOutlined,
   DeleteOutlined,
   CommentOutlined,
+  LeftOutlined, // Thêm LeftOutlined vào import
 } from "@ant-design/icons";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
 import {
   submitAssignment,
   getSubmittedAssignments,
@@ -39,6 +40,7 @@ const SubmitAssignment = () => {
   const { classId, folderId } = useParams();
   const [submitting, setSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const navigate = useNavigate(); // Khai báo hook navigate
 
   useEffect(() => {
     fetchAssignments();
@@ -104,8 +106,22 @@ const SubmitAssignment = () => {
     fileList: file ? [file] : [],
   };
 
+  const handleGoBack = () => {
+    navigate(-1); // Quay lại trang trước
+  };
+
   return (
     <div className="submit-assignment">
+      {/* Nút quay lại */}
+      <Button
+        onClick={handleGoBack}
+        icon={<LeftOutlined />}
+        type="text"
+        className="go-back-button"
+      >
+        Go Back
+      </Button>
+
       <motion.div
         className="submit-form"
         initial={{ opacity: 0, x: -20 }}

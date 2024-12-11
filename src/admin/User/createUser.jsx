@@ -1,9 +1,9 @@
-import React from "react";
 import { Form, Input, Button, Select, notification } from "antd";
 import {
   UserAddOutlined,
   CheckCircleOutlined,
   WarningOutlined,
+  ArrowLeftOutlined,
 } from "@ant-design/icons";
 import { register } from "../../services/login";
 import { useNavigate } from "react-router-dom";
@@ -40,6 +40,12 @@ const CreateUser = () => {
 
   return (
     <div className="create-user-container">
+      <Button
+        className="back-button"
+        type="text"
+        icon={<ArrowLeftOutlined />}
+        onClick={() => navigate(-1)}
+      />
       <div className="form-card">
         <div className="form-title">
           <h2>Create New User</h2>
