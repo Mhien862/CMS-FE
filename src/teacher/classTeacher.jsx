@@ -11,11 +11,7 @@ import {
   Input,
   Empty,
 } from "antd";
-import {
-  SearchOutlined,
-  LoginOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined, LoginOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import "./style.scss";

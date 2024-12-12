@@ -74,7 +74,7 @@ const ClassFolders = () => {
   }, [classId, fetchClassInfo, fetchFolders]);
 
   const handleGoBack = () => {
-    navigate(-1); // Navigate back to the previous page
+    navigate(-1);
   };
 
   if (loading) {

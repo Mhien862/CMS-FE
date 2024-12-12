@@ -46,7 +46,20 @@ const StudentAllClasses = () => {
     try {
       const status = await checkEnrollmentStatus(classItem.id);
       if (status.isEnrolled) {
-        navigate(`/student/class/${classItem.id}/folder`);
+        try {
+          await joinClass(classItem.id, "");
+          navigate(`/student/class/${classItem.id}/folder`);
+        } catch (error) {
+          if (error.response?.status === 402) {
+            setJoiningClass(false);
+            setSelectedClass(classItem);
+          } else {
+            notification.error({
+              message: "Error",
+              description: error.response?.data?.message,
+            });
+          }
+        }
       } else {
         setJoiningClass(false);
       }
