@@ -11,6 +11,7 @@ import {
   BellOutlined,
   SettingOutlined,
   SearchOutlined,
+  BarChartOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -102,6 +103,12 @@ const Layout = () => {
       icon: <DashboardOutlined />,
       label: "Academic Year",
     },
+    {
+      key: "/dashboard",
+      icon: <BarChartOutlined />,
+      label: "Dashboard",
+    },
+
   ];
 
   return (

@@ -20,6 +20,7 @@ import FolderPage from "./teacher/folderPage";
 import CreateAcademicYear from "./admin/AcademicYear/CreateAcademicYear";
 import ManageSemesters from "./admin/AcademicYear/ManageSemesters";
 import AcademicYearPage from "./admin/AcademicYear/ClassHierarchy";
+import {Dashboard} from "./admin/Dashboard/index.jsx";
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -114,6 +115,11 @@ const router = createBrowserRouter([
         path: "academic-year",
         element: <AcademicYearPage />,
       },
+      {
+        path: "dashboard",
+        element: <Dashboard />,
+      }
+
     ],
   },
   {
