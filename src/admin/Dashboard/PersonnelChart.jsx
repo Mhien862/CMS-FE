@@ -51,8 +51,6 @@ const PersonnelChart = ({ data, viewMode, toggleView, windowWidth }) => {
       </div>
     );
   };
-
-  // Tính toán kích thước biểu đồ dựa trên kích thước màn hình
   const chartWidth = windowWidth
     ? windowWidth <= 768
       ? windowWidth * 0.9
@@ -61,7 +59,7 @@ const PersonnelChart = ({ data, viewMode, toggleView, windowWidth }) => {
 
   const chartHeight = windowWidth && windowWidth <= 480 ? 300 : 400;
 
-  // Đảm bảo biểu đồ có đủ không gian cho mỗi dự án
+  // eslint-disable-next-line react/prop-types
   const minWidth = data.length * 100;
   const finalChartWidth = Math.max(minWidth, chartWidth);
 
