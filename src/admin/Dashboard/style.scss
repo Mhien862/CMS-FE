@@ -65,6 +65,7 @@
       transform-style: preserve-3d;
       perspective: 1000px;
       padding: 0 15px 15px;
+      width: 100%; /* Đảm bảo width 100% */
 
       &.flipOut {
         transform: rotateY(90deg);
@@ -80,7 +81,7 @@
       max-height: 500px;
       overflow-y: auto;
       overflow-x: auto; /* Enable horizontal scrolling */
-      width: 100%;
+      width: 100%; /* Đảm bảo width 100% */
     }
   }
 }
@@ -193,7 +194,8 @@
     transition: all 0.3s ease;
     transform-style: preserve-3d;
     perspective: 1000px;
-    padding: 0 15px 15px;
+    padding: 0; /* Đã xóa padding bên trái và phải */
+    width: 100%;
 
     &.flipOut {
       transform: rotateY(90deg);
@@ -210,6 +212,7 @@
     overflow-y: auto;
     overflow-x: auto; /* Enable horizontal scrolling */
     width: 100%;
+    padding: 0; /* Đã xóa padding */
   }
 }
 
@@ -281,13 +284,13 @@
 
 .chart-scroll-container::-webkit-scrollbar-thumb,
 .p-datatable-scrollable-body::-webkit-scrollbar-thumb {
-  background: #df1c6a;
+  background: #888; /* Thay đổi màu thanh cuộn */
   border-radius: 3px;
 }
 
 .chart-scroll-container::-webkit-scrollbar-thumb:hover,
 .p-datatable-scrollable-body::-webkit-scrollbar-thumb:hover {
-  background: #ec1a83;
+  background: #666; /* Thay đổi màu khi hover */
 }
 
 /* Đảm bảo bảng có scrolling khi cần */
@@ -307,12 +310,14 @@
 .recharts-wrapper,
 .recharts-surface {
   overflow: visible;
+  width: 100% !important; /* Đảm bảo SVG lấp đầy container */
 }
 
 /* Style cho chart responsive */
 .recharts-responsive-container {
   width: 100% !important;
   height: auto !important;
+  padding: 0 !important; /* Loại bỏ padding */
 }
 
 /* Media queries cho các màn hình khác nhau */
@@ -323,8 +328,7 @@
 
   .recharts-wrapper,
   .recharts-surface {
-    transform: scale(0.95);
-    transform-origin: left top;
+    width: 100% !important;
   }
 }
 
@@ -337,12 +341,6 @@
       margin-bottom: 20px;
       width: 100%;
     }
-  }
-
-  .recharts-wrapper,
-  .recharts-surface {
-    transform: scale(0.9);
-    transform-origin: left top;
   }
 
   .recharts-legend-item {
@@ -381,12 +379,6 @@
     min-width: 250px; /* Giảm min-width */
   }
 
-  .recharts-wrapper,
-  .recharts-surface {
-    transform: scale(0.85);
-    transform-origin: left top;
-  }
-
   .recharts-default-legend {
     font-size: 11px;
   }
@@ -403,12 +395,6 @@
 
   .recharts-text {
     font-size: 10px;
-  }
-
-  .recharts-wrapper,
-  .recharts-surface {
-    transform: scale(0.8);
-    transform-origin: left top;
   }
 }
 
@@ -430,12 +416,6 @@
     min-width: 200px; /* Giảm tiếp min-width cho màn hình điện thoại */
   }
 
-  .recharts-wrapper,
-  .recharts-surface {
-    transform: scale(0.75);
-    transform-origin: left top;
-  }
-
   .button_sort {
     margin-right: 10px;
     font-size: 12px;
@@ -455,12 +435,6 @@
 }
 
 @media screen and (max-width: 360px) {
-  .recharts-wrapper,
-  .recharts-surface {
-    transform: scale(0.65);
-    transform-origin: left top;
-  }
-
   .chart-wrapper {
     min-width: 180px;
   }

@@ -82,6 +82,7 @@ export const taskData = [
     { name: "Dự án N", PM: 4, BA: 6, Dev: 18, Tester: 7 },
     { name: "Dự án O", PM: 3, BA: 4, Dev: 12, Tester: 4 },
     { name: "Dự án P", PM: 5, BA: 7, Dev: 19, Tester: 6 },
+    
   ];
   
   export const bugData = [

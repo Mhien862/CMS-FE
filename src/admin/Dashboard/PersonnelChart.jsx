@@ -6,6 +6,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  ResponsiveContainer,
 } from "recharts";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -51,17 +52,9 @@ const PersonnelChart = ({ data, viewMode, toggleView, windowWidth }) => {
       </div>
     );
   };
-  const chartWidth = windowWidth
-    ? windowWidth <= 768
-      ? windowWidth * 0.9
-      : windowWidth * 0.82
-    : window.innerWidth * 0.82;
 
+  // Tính toán chiều cao dựa trên kích thước màn hình
   const chartHeight = windowWidth && windowWidth <= 480 ? 300 : 400;
-
-  // eslint-disable-next-line react/prop-types
-  const minWidth = data.length * 100;
-  const finalChartWidth = Math.max(minWidth, chartWidth);
 
   return (
     <>
@@ -76,23 +69,41 @@ const PersonnelChart = ({ data, viewMode, toggleView, windowWidth }) => {
 
       <div className={`content-container ${animation}`}>
         {viewMode === "chart" ? (
-          <div style={{ overflowX: "auto", overflowY: "auto" }}>
-            <BarChart
-              width={finalChartWidth}
-              height={chartHeight}
-              data={data}
-              margin={{ top: 20, right: 30, left: 30, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis type="number" />
-              <Tooltip />
-              <Legend verticalAlign="top" height={36} iconType="circle" />
-              <Bar dataKey="PM" stackId="a" fill="#BBDEFB" name="PM" />
-              <Bar dataKey="BA" stackId="a" fill="#64B5F6" name="BA" />
-              <Bar dataKey="Dev" stackId="a" fill="#1976D2" name="Dev" />
-              <Bar dataKey="Tester" stackId="a" fill="#0D47A1" name="Tester" />
-            </BarChart>
+          <div className="chart-scroll-container">
+            <ResponsiveContainer width="100%" height={chartHeight}>
+              <BarChart
+                data={data}
+                margin={{ top: 20, right: 0, left: 0, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: windowWidth <= 768 ? 10 : 12 }}
+                />
+                <YAxis
+                  type="number"
+                  tick={{ fontSize: windowWidth <= 768 ? 10 : 12 }}
+                />
+                <Tooltip />
+                <Legend
+                  verticalAlign="top"
+                  height={36}
+                  iconType="circle"
+                  wrapperStyle={{
+                    fontSize: windowWidth <= 768 ? "10px" : "12px",
+                  }}
+                />
+                <Bar dataKey="PM" stackId="a" fill="#BBDEFB" name="PM" />
+                <Bar dataKey="BA" stackId="a" fill="#64B5F6" name="BA" />
+                <Bar dataKey="Dev" stackId="a" fill="#1976D2" name="Dev" />
+                <Bar
+                  dataKey="Tester"
+                  stackId="a"
+                  fill="#0D47A1"
+                  name="Tester"
+                />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         ) : (
           renderTable(data)
