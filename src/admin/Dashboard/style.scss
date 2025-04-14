@@ -79,7 +79,8 @@
     .chart-scroll-container {
       max-height: 500px;
       overflow-y: auto;
-      overflow-x: hidden;
+      overflow-x: auto;
+      width: 100%;
     }
   }
 }
@@ -207,7 +208,8 @@
   .chart-scroll-container {
     max-height: 500px;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
+    width: 100%;
   }
 }
 
@@ -268,6 +270,7 @@
 .chart-scroll-container::-webkit-scrollbar,
 .p-datatable-scrollable-body::-webkit-scrollbar {
   width: 6px;
+  height: 6px; /* Add height for horizontal scrollbar */
 }
 
 .chart-scroll-container::-webkit-scrollbar-track,
@@ -278,21 +281,21 @@
 
 .chart-scroll-container::-webkit-scrollbar-thumb,
 .p-datatable-scrollable-body::-webkit-scrollbar-thumb {
-  background: #df1c6a;
+  background: #f1f1f1;
   border-radius: 3px;
 }
 
 .chart-scroll-container::-webkit-scrollbar-thumb:hover,
 .p-datatable-scrollable-body::-webkit-scrollbar-thumb:hover {
-  background: #ec1a83;
+  background: #f1f1f1;
 }
 
 /* Đảm bảo bảng có scrolling khi cần */
 .table-container {
   .p-datatable-wrapper {
     overflow-y: auto;
+    overflow-x: auto; /* Add horizontal scrolling for table */
     max-height: 500px;
-    overflow-x: auto;
   }
 
   .p-datatable table {

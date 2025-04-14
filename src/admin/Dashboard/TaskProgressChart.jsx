@@ -10,12 +10,27 @@ import {
 import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // eslint-disable-next-line react/prop-types
 const TaskProgressChart = ({ data, viewMode, toggleView }) => {
   const [isFlipping, setIsFlipping] = useState(false);
   const [animation, setAnimation] = useState("");
+  const [chartWidth, setChartWidth] = useState(600);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      const container = document.querySelector(".chart-wrapper");
+      if (container) {
+        const containerWidth = container.clientWidth;
+        setChartWidth(Math.max(600, containerWidth - 30));
+      }
+    };
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
 
   const handleToggleView = () => {
     if (isFlipping) return;
@@ -74,7 +89,7 @@ const TaskProgressChart = ({ data, viewMode, toggleView }) => {
           <div className="chart-scroll-container">
             <BarChart
               layout="vertical"
-              width={600}
+              width={chartWidth}
               // eslint-disable-next-line react/prop-types
               height={data.length * 40}
               data={data}

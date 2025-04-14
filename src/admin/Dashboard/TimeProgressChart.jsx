@@ -10,12 +10,27 @@ import {
 import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // eslint-disable-next-line react/prop-types
 const TimeProgressChart = ({ data, viewMode, toggleView }) => {
   const [isFlipping, setIsFlipping] = useState(false);
   const [animation, setAnimation] = useState("");
+  const [chartWidth, setChartWidth] = useState(600);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      const container = document.querySelector(".chart-wrapper");
+      if (container) {
+        const containerWidth = container.clientWidth;
+        setChartWidth(Math.max(600, containerWidth - 30));
+      }
+    };
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
 
   const handleToggleView = () => {
     if (isFlipping) return;
@@ -74,23 +89,19 @@ const TimeProgressChart = ({ data, viewMode, toggleView }) => {
 
       <div className={`content-container ${animation}`}>
         {viewMode === "chart" ? (
-          <div
-            className="chart-scroll-container"
-            style={{ maxHeight: "500px", overflowY: "auto" }}
-          >
+          <div className="chart-scroll-container">
             <BarChart
               layout="vertical"
-              width={600}
-              // eslint-disable-next-line react/prop-types
+              width={chartWidth}
               height={data.length * 40}
               data={data}
               margin={{ top: 20, right: 30, left: 90, bottom: 5 }}
             >
+              <Legend verticalAlign="top" height={36} iconType="circle" />
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis type="number" />
               <YAxis dataKey="name" type="category" />
               <Tooltip />
-              <Legend verticalAlign="top" height={36} iconType="circle" />
               <Bar
                 dataKey="actualTime"
                 stackId="a"
