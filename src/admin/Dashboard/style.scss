@@ -1,0 +1,353 @@
+.dashboard-container {
+  font-family: Arial, sans-serif;
+  padding: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 15px;
+}
+
+.tag {
+  padding: 5px 10px;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  flex-grow: 1;
+  min-width: 200px;
+}
+
+.chart-section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 20px;
+
+  .chart-wrapper {
+    flex: 1 1 300px;
+    min-width: 300px;
+    border-style: solid;
+    border-color: #df1c6a;
+    border-radius: 10px;
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+
+      h4 {
+        font-size: 18px;
+        flex: 1;
+        text-align: center;
+        margin: 0;
+        color: rgb(236, 26, 131);
+      }
+
+      .pi-refresh {
+        cursor: pointer;
+
+        &.spinning {
+          animation: p-spin 1s linear infinite;
+        }
+      }
+    }
+
+    .content-container {
+      transition: all 0.3s ease;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+      padding: 0 15px 15px;
+
+      &.flipOut {
+        transform: rotateY(90deg);
+        opacity: 0.3;
+      }
+
+      &.flipIn {
+        animation: flipInAnimation 0.3s forwards;
+      }
+    }
+
+    .chart-scroll-container {
+      max-height: 500px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+  }
+}
+
+.button_sort {
+  display: block;
+  margin-left: auto;
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+.tag.success {
+  background-color: #00c4cc;
+  width: 100%;
+  max-width: 325px;
+  height: auto;
+  min-height: 80px;
+  font-size: clamp(16px, 2vw, 20px);
+  font-style: normal;
+  border-radius: 10px;
+
+  .tag-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .number_tag {
+    padding: 5px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.tag.warning {
+  background-color: #fab348;
+  width: 100%;
+  max-width: 325px;
+  height: auto;
+  min-height: 80px;
+  font-size: clamp(14px, 2vw, 18px);
+  font-style: normal;
+  border-radius: 10px;
+  margin-right: 110px;
+
+  .tag-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .number_tag {
+    padding: 5px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.header .title {
+  flex-grow: 1;
+  min-width: 250px;
+}
+
+.header .title h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.header .title span {
+  font-size: 12px;
+  color: #666;
+}
+
+.bottom-chart {
+  margin-top: 20px;
+  border: solid;
+  border-radius: 10px;
+  border-color: #df1c6a;
+  width: 100%;
+  box-sizing: border-box;
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+
+    h4 {
+      font-size: clamp(16px, 2vw, 20px);
+      flex: 1;
+      text-align: center;
+      margin: 0;
+      color: rgb(236, 26, 131);
+    }
+
+    .pi-refresh {
+      cursor: pointer;
+
+      &.spinning {
+        animation: p-spin 1s linear infinite;
+      }
+    }
+  }
+
+  .content-container {
+    transition: all 0.3s ease;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    padding: 0 15px 15px;
+
+    &.flipOut {
+      transform: rotateY(90deg);
+      opacity: 0.3;
+    }
+
+    &.flipIn {
+      animation: flipInAnimation 0.3s forwards;
+    }
+  }
+
+  .chart-scroll-container {
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+.bottom-chart h3 {
+  margin-bottom: 10px;
+}
+
+.title {
+  display: flex;
+  align-items: flex-end;
+
+  .project-filter {
+    min-width: 150px;
+    width: 100%;
+
+    .p-multiselect {
+      width: 100%;
+      max-width: 100;
+
+      @media screen and (min-width: 768px) {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.project-dropdown-panel {
+  max-height: 250px;
+  overflow-y: auto;
+  max-width: 90vw;
+}
+
+.p-spin {
+  animation: p-spin 1s linear infinite;
+}
+
+@keyframes p-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes flipInAnimation {
+  from {
+    transform: rotateY(-90deg);
+    opacity: 0.3;
+  }
+  to {
+    transform: rotateY(0);
+    opacity: 1;
+  }
+}
+
+/* Tùy chỉnh thanh cuộn */
+.chart-scroll-container::-webkit-scrollbar,
+.p-datatable-scrollable-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chart-scroll-container::-webkit-scrollbar-track,
+.p-datatable-scrollable-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.chart-scroll-container::-webkit-scrollbar-thumb,
+.p-datatable-scrollable-body::-webkit-scrollbar-thumb {
+  background: #df1c6a;
+  border-radius: 3px;
+}
+
+.chart-scroll-container::-webkit-scrollbar-thumb:hover,
+.p-datatable-scrollable-body::-webkit-scrollbar-thumb:hover {
+  background: #ec1a83;
+}
+
+/* Đảm bảo bảng có scrolling khi cần */
+.table-container {
+  .p-datatable-wrapper {
+    overflow-y: auto;
+    max-height: 500px;
+    overflow-x: auto;
+  }
+
+  .p-datatable table {
+    min-width: 500px;
+  }
+}
+
+/* Media queries cho các màn hình khác nhau */
+@media screen and (max-width: 1024px) {
+  .chart-section {
+    flex-direction: column;
+
+    .chart-wrapper {
+      margin-right: 0;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+
+    .tag {
+      max-width: 100%;
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      width: 100%;
+      margin-left: 0;
+    }
+  }
+
+  .chart-scroll-container,
+  .p-datatable-scrollable-body {
+    max-height: 400px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .dashboard-container {
+    padding: 10px;
+  }
+
+  .chart-header h4 {
+    font-size: 16px;
+  }
+
+  .chart-scroll-container,
+  .p-datatable-scrollable-body {
+    max-height: 300px;
+  }
+}

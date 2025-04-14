@@ -11,6 +11,7 @@ import {
   BellOutlined,
   SettingOutlined,
   SearchOutlined,
+  BarChartOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -102,11 +103,16 @@ const Layout = () => {
       icon: <DashboardOutlined />,
       label: "Academic Year",
     },
+    {
+      key: "/dashboard",
+      icon: <BarChartOutlined />,
+      label: "Dashboard",
+    },
   ];
 
   return (
     <LayoutAntd className="minimal-layout">
-      <Sider
+      {/* <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
@@ -121,7 +127,7 @@ const Layout = () => {
           onClick={({ key }) => navigate(key)}
           className="minimal-menu"
         />
-      </Sider>
+      </Sider> */}
       <LayoutAntd>
         <Header className="minimal-header">
           <Button
