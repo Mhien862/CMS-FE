@@ -31,7 +31,7 @@ function Login() {
   const redirectBasedOnRole = (roleId) => {
     switch (roleId) {
       case 1: // Admin role
-        navigate("/list-user");
+        navigate("/dashboard");
         break;
       case 2: // Teacher role
         navigate("/teacher/class-teacher");

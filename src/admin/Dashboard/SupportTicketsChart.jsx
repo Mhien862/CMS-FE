@@ -59,6 +59,7 @@ const SupportTicketsChart = ({ data, viewMode, toggleView, windowWidth }) => {
 
   const chartHeight = windowWidth && windowWidth <= 480 ? 300 : 400;
 
+  // eslint-disable-next-line react/prop-types
   const minWidth = data.length * 100;
   const finalChartWidth = Math.max(minWidth, chartWidth);
 
