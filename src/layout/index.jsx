@@ -108,12 +108,11 @@ const Layout = () => {
       icon: <BarChartOutlined />,
       label: "Dashboard",
     },
-
   ];
 
   return (
     <LayoutAntd className="minimal-layout">
-      <Sider
+      {/* <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
@@ -128,7 +127,7 @@ const Layout = () => {
           onClick={({ key }) => navigate(key)}
           className="minimal-menu"
         />
-      </Sider>
+      </Sider> */}
       <LayoutAntd>
         <Header className="minimal-header">
           <Button

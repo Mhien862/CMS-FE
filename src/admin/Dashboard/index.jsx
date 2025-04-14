@@ -28,6 +28,19 @@ export const Dashboard = () => {
     supportTickets: "chart",
   });
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const allProjects = [
     ...new Set([
       ...taskData.map((item) => item.name),
@@ -97,7 +110,7 @@ export const Dashboard = () => {
           onChange={(e) => setSelectedProjects(e.value)}
           placeholder="Tất cả dự án"
           display="chip"
-          className="w-full md:w-20rem"
+          className="w-full"
           panelClassName="project-dropdown-panel"
           showSelectAll
           selectAll={true}
@@ -130,12 +143,14 @@ export const Dashboard = () => {
           data={filteredData.taskData}
           viewMode={viewModes.taskProgress}
           toggleView={() => toggleView("taskProgress")}
+          windowWidth={windowWidth}
         />
 
         <TimeProgressChart
           data={filteredData.timeData}
           viewMode={viewModes.timeProgress}
           toggleView={() => toggleView("timeProgress")}
+          windowWidth={windowWidth}
         />
       </div>
 
@@ -144,6 +159,7 @@ export const Dashboard = () => {
           data={filteredData.projectTaskData}
           viewMode={viewModes.projectTasks}
           toggleView={() => toggleView("projectTasks")}
+          windowWidth={windowWidth}
         />
       </div>
 
@@ -152,6 +168,7 @@ export const Dashboard = () => {
           data={filteredData.personnelData}
           viewMode={viewModes.personnel}
           toggleView={() => toggleView("personnel")}
+          windowWidth={windowWidth}
         />
       </div>
 
@@ -160,6 +177,7 @@ export const Dashboard = () => {
           data={filteredData.bugData}
           viewMode={viewModes.bugs}
           toggleView={() => toggleView("bugs")}
+          windowWidth={windowWidth}
         />
       </div>
 
@@ -168,6 +186,7 @@ export const Dashboard = () => {
           data={filteredData.supportTicketData}
           viewMode={viewModes.supportTickets}
           toggleView={() => toggleView("supportTickets")}
+          windowWidth={windowWidth}
         />
       </div>
     </div>
